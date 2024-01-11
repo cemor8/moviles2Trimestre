@@ -1,5 +1,8 @@
 package com.example.librosbasedatos;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.StrictMode;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,11 +37,14 @@ public class MainActivity extends AppCompatActivity {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         this.libros = new ArrayList<>();
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         try {
             //conexion = new Conexion();
             //connection = conexion.hacerConexion("root", "",false);
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection("jdbc:mysql://10.0.2.2:3306/biblioteca","root","");
 
-            connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/biblioteca","root","");
             String updateSQL = "Select * from biblioteca.libro";
             preparedStatement = connection.prepareStatement(updateSQL);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -55,9 +61,13 @@ public class MainActivity extends AppCompatActivity {
 
             preparedStatement.close();
             connection.close();
-            conexion.cerrarConexion();
+
+            //conexion.cerrarConexion();
         } catch (SQLException err) {
             System.out.println(err.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+            throw new RuntimeException(e);
         } finally {
             if (connection != null) {
                 try {

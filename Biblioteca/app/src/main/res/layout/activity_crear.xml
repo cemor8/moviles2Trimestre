@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                                                   android:layout_height="match_parent">
+
+    <EditText
+            android:layout_width="217dp"
+            android:layout_height="55dp"
+            android:inputType="text"
+            android:ems="10"
+            android:id="@+id/introducirTitulo"
+            android:layout_marginEnd="105dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView7"/>
+    <EditText
+            android:layout_width="217dp"
+            android:layout_height="55dp"
+            android:inputType="text"
+            android:ems="10"
+            android:id="@+id/introducirAutor"
+            android:layout_marginEnd="105dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView8"/>
+    <EditText
+            android:layout_width="217dp"
+            android:layout_height="55dp"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/introducirPaginas"
+            android:layout_marginEnd="105dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView12"/>
+    <EditText
+            android:layout_width="217dp"
+            android:layout_height="55dp"
+            android:inputType="date"
+            android:ems="10"
+            android:id="@+id/introducirFecha"
+            android:layout_marginEnd="105dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginBottom="66dp"
+            app:layout_constraintBottom_toTopOf="@+id/btnCrear"/>
+    <Button
+            android:text="Crear"
+            android:layout_width="159dp"
+            android:layout_height="70dp" android:id="@+id/btnCrear"
+            android:layout_marginEnd="132dp" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="36dp"
+            android:onClick="crearLibro"/>
+    <TextView
+            android:text="Título"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/textView3"
+            android:textSize="25dp" android:layout_marginEnd="256dp" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="110dp"/>
+    <TextView
+            android:text="Autor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/textView7"
+            android:textSize="25dp" android:layout_marginEnd="259dp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="11dp" app:layout_constraintBottom_toTopOf="@+id/introducirAutor"/>
+    <TextView
+            android:text="Páginas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/textView8"
+            android:textSize="25dp" android:layout_marginEnd="230dp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="14dp" app:layout_constraintBottom_toTopOf="@+id/introducirPaginas"/>
+    <TextView
+            android:text="Fecha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/textView12"
+            android:textSize="25dp" android:layout_marginEnd="254dp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="16dp" app:layout_constraintBottom_toTopOf="@+id/introducirFecha"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
