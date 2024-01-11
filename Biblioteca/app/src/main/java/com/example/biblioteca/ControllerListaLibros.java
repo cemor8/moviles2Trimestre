@@ -2,6 +2,7 @@ package com.example.biblioteca;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +27,7 @@ public class ControllerListaLibros extends AppCompatActivity {
             TextView textView = new TextView(this);
             textView.setText(this.libros.get(i).getTitulo());
             textView.setTextSize(18);
-            textView.setPadding(0, 206, 16, 16);
+            textView.setPadding(0, 200, 16, 16);
 
             int finalI = i;
 
@@ -42,6 +43,10 @@ public class ControllerListaLibros extends AppCompatActivity {
 
             linearLayout.addView(textView);
         }
+    }
+    public void volver(View view){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     private void abrirDetalleLibro(int posicionLibro) {

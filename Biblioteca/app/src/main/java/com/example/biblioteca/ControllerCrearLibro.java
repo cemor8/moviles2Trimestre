@@ -1,5 +1,6 @@
 package com.example.biblioteca;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -73,6 +74,10 @@ public class ControllerCrearLibro extends AppCompatActivity {
         this.libros.add(new Libro(this.introducirTitulo.getText().toString(),this.introducirAutor.getText().toString(),Integer.parseInt(this.introducirPaginas.getText().toString()),
                 this.introducirFecha.getText().toString()));
 
+    }
+    public void volver(View view){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     /**
