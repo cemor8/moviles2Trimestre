@@ -1,78 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-                                                   android:layout_height="match_parent">
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   android:background="@color/negroPrincipal">
 
     <TextView
             android:text="Titulo"
             android:layout_width="99dp"
             android:layout_height="52dp" android:id="@+id/textView"
             android:textSize="30sp" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="59dp"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="116dp"/>
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="116dp"
+            android:textColor="@color/white"/>
     <TextView
             android:text="Titulo"
             android:layout_width="187dp"
             android:layout_height="48dp" android:id="@+id/mostrarTitulo"
             android:textSize="30sp" android:gravity="center|start" android:layout_marginEnd="21dp"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="116dp"/>
+            android:layout_marginTop="116dp" android:textColor="@color/white"/>
     <TextView
             android:text="Titulo"
             android:layout_width="187dp"
             android:layout_height="48dp" android:id="@+id/mostrarAutor"
             android:textSize="30sp" android:gravity="start" android:layout_marginEnd="21dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/mostrarTitulo"/>
+            app:layout_constraintTop_toBottomOf="@+id/mostrarTitulo" android:textColor="@color/white"/>
     <TextView
             android:text="Titulo"
             android:layout_width="187dp"
             android:layout_height="48dp" android:id="@+id/mostrarPag"
             android:textSize="30sp" android:gravity="start" android:layout_marginEnd="21dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="26dp"
-            app:layout_constraintTop_toBottomOf="@+id/mostrarAutor"/>
+            app:layout_constraintTop_toBottomOf="@+id/mostrarAutor" android:textColor="@color/white"/>
     <TextView
             android:text="Titulo"
             android:layout_width="187dp"
             android:layout_height="48dp" android:id="@+id/mostrarFecha"
             android:textSize="30sp" android:gravity="start" android:layout_marginEnd="21dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="28dp"
-            app:layout_constraintTop_toBottomOf="@+id/mostrarPag"/>
+            app:layout_constraintTop_toBottomOf="@+id/mostrarPag" android:textColor="@color/white"/>
     <TextView
             android:text="Páginas"
             android:layout_width="109dp"
             android:layout_height="52dp" android:id="@+id/textView9"
             android:textSize="30sp" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="59dp"
-            android:layout_marginTop="21dp" app:layout_constraintTop_toBottomOf="@+id/textView10"/>
+            android:layout_marginTop="21dp" app:layout_constraintTop_toBottomOf="@+id/textView10"
+            android:textColor="@color/white"/>
     <TextView
             android:text="Fecha"
             android:layout_width="99dp"
             android:layout_height="52dp" android:id="@+id/textView11"
             android:textSize="30sp" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="59dp"
-            android:layout_marginTop="24dp" app:layout_constraintTop_toBottomOf="@+id/textView9"/>
+            android:layout_marginTop="24dp" app:layout_constraintTop_toBottomOf="@+id/textView9"
+            android:textColor="@color/white"/>
     <TextView
             android:text="Autor"
             android:layout_width="99dp"
             android:layout_height="52dp" android:id="@+id/textView10"
             android:textSize="30sp" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="59dp"
-            android:layout_marginTop="12dp" app:layout_constraintTop_toBottomOf="@+id/textView"/>
+            android:layout_marginTop="12dp" app:layout_constraintTop_toBottomOf="@+id/textView"
+            android:textColor="@color/white"/>
     <Button
             android:text="Volver"
             android:layout_width="137dp"
             android:layout_height="68dp" android:id="@+id/btnVolver"
-            android:onClick="volver" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="47dp"
-            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="146dp"/>
+            android:onClick="volver" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="40dp"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="146dp"
+            android:backgroundTint="@color/azulPrincipal"/>
     <Button
             android:text="Modificar"
             android:layout_width="137dp"
             android:layout_height="68dp" android:id="@+id/btnModificar"
-            android:layout_marginEnd="63dp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="40dp" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="146dp"
-            android:onClick="modificar"/>
+            android:onClick="modificar" android:backgroundTint="@color/azulPrincipal"/>
     <Button
             android:text="Eliminar"
             android:layout_width="137dp"
             android:layout_height="68dp" android:id="@+id/btnEliminar"
-            android:layout_marginEnd="136dp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="139dp" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="56dp"
-            android:onClick="eliminar"/>
+            android:onClick="eliminar" android:backgroundTint="@color/azulPrincipal"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

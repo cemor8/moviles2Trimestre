@@ -5,5 +5,5 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.BibliotecaMongo" parent="Base.Theme.BibliotecaMongo"/>
+    <style name="Theme.BibliotecaMongo" parent="Base.Theme.BibliotecaMongo" />
 </resources>

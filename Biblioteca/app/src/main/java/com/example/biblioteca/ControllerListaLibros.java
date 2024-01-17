@@ -27,7 +27,8 @@ public class ControllerListaLibros extends AppCompatActivity {
             TextView textView = new TextView(this);
             textView.setText(this.libros.get(i).getTitulo());
             textView.setTextSize(18);
-            textView.setPadding(0, 200, 16, 16);
+            textView.setPadding(0, 160, 0, 0);
+            textView.setTextColor(getResources().getColor(R.color.white));
 
             int finalI = i;
 

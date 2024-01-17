@@ -13,8 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
+
 rootProject.name = "BibliotecaMongo"
 include(":app")
-
-
- 

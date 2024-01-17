@@ -5,19 +5,19 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".MainActivity" android:background="@color/negroPrincipal">
     <Button
             android:text="Ver Libros"
             android:layout_width="183dp"
             android:layout_height="79dp" android:id="@+id/button"
             android:layout_marginEnd="114dp" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginBottom="38dp" app:layout_constraintBottom_toTopOf="@+id/button2"
-            android:onClick="ver"/>
+            android:onClick="ver" android:backgroundTint="@color/azulPrincipal"/>
     <Button
             android:text="Crear Libro"
             android:layout_width="183dp"
             android:layout_height="79dp" android:id="@+id/button2"
             android:layout_marginEnd="114dp" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="156dp"
-            android:onClick="crear"/>
+            android:onClick="crear" android:backgroundTint="@color/azulPrincipal"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
