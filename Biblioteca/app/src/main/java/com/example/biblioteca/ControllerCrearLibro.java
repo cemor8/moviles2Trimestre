@@ -2,6 +2,7 @@ package com.example.biblioteca;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +16,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ControllerCrearLibro extends AppCompatActivity {
     EditText introducirTitulo;
@@ -46,6 +51,7 @@ public class ControllerCrearLibro extends AppCompatActivity {
      * */
     public void crearLibro(View view){
         System.out.println("creando el libro");
+        /*
         boolean error = false;
         if(!validarDatos(this.columnasExpresiones.get("Titulo"),this.introducirTitulo.getText().toString())){
             error = true;
@@ -64,15 +70,47 @@ public class ControllerCrearLibro extends AppCompatActivity {
             System.out.println("error");
             return;
         }
+
+         */
         System.out.println("No hay errores");
         Optional<Libro> libroRepetidoOptional = this.libros.stream().filter(libro -> libro.getTitulo().equalsIgnoreCase(this.introducirTitulo.getText().toString())).findAny();
         if(libroRepetidoOptional.isPresent()){
             return;
         }
+        Libro libroCreado = new Libro(this.introducirTitulo.getText().toString(),this.introducirAutor.getText().toString(),
+                Integer.parseInt(this.introducirPaginas.getText().toString()),this.introducirFecha.getText().toString());
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+        Call<ArrayList<Libro>> call = api.meterLibro(libroCreado);
+        call.enqueue(new Callback<ArrayList<Libro>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Libro>> call, Response<ArrayList<Libro>> response) {
+                System.out.println("respuesta");
+                if (response.isSuccessful()) {
+                    libros.add(libroCreado);
+
+                }else {
+                    System.out.println("Error en server");
+                    int statusCode = response.code();
+                    System.out.println(statusCode);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Libro>> call, Throwable err) {
+                System.out.println("Error al intentar enviar datos");
+                System.out.println(err.getMessage());
+            }
+        });
+
+
+        /*
         OperacionesBase operacionesBase = OperacionesBase.getInstance(this);
         operacionesBase.meterLibro(this.introducirTitulo.getText().toString(),this.introducirAutor.getText().toString(),this.introducirFecha.getText().toString(),Integer.parseInt(this.introducirPaginas.getText().toString()));
         this.libros.add(new Libro(this.introducirTitulo.getText().toString(),this.introducirAutor.getText().toString(),Integer.parseInt(this.introducirPaginas.getText().toString()),
                 this.introducirFecha.getText().toString()));
+
+         */
 
     }
     public void volver(View view){

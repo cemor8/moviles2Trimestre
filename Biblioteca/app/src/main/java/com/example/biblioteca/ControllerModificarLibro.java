@@ -1,10 +1,13 @@
 package com.example.biblioteca;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -13,6 +16,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ControllerModificarLibro extends AppCompatActivity {
     private ArrayList<Libro> libros;
     private Libro libroSeleccionado;
@@ -20,6 +27,7 @@ public class ControllerModificarLibro extends AppCompatActivity {
     private EditText modificarTitulo;
     private EditText modificarPag;
     private EditText modificarFecha;
+    private Context context;
     Map<String, String> columnasExpresiones = new HashMap<String, String>() {
         {
             put("Paginas", "^\\d{1,5}$");
@@ -34,6 +42,7 @@ public class ControllerModificarLibro extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.modificar_libro);
         Intent intent = getIntent();
+        context = getApplicationContext();
         if (intent.hasExtra("libros")) {
             this.libros = (ArrayList<Libro>) intent.getSerializableExtra("libros");
         }
@@ -54,19 +63,47 @@ public class ControllerModificarLibro extends AppCompatActivity {
         startActivity(intent);
     }
     public void guardar(View view){
-        boolean error = false;
-        if(!validarDatos(this.columnasExpresiones.get("Titulo"),this.modificarTitulo.getText().toString())){
-            error = true;
+
+        if(validarDatos(this.columnasExpresiones.get("Titulo"),this.modificarTitulo.getText().toString())){
+            this.libroSeleccionado.setTitulo(this.modificarTitulo.getText().toString());
+            this.modificarTitulo.setText("");
+        }else if(!this.modificarTitulo.getText().toString().isEmpty()){
+            this.modificarTitulo.setText("");
         }
-        if(!validarDatos(this.columnasExpresiones.get("Autor"),this.modificarAutor.getText().toString())){
-            error = true;
+
+        if(validarDatos(this.columnasExpresiones.get("Autor"),this.modificarAutor.getText().toString())){
+            this.libroSeleccionado.setAutor(this.modificarAutor.getText().toString());
+            this.modificarAutor.setText("");
+        }else if(!this.modificarAutor.getText().toString().isEmpty()){
+            this.modificarAutor.setText("");
         }
-        if(!validarDatos(this.columnasExpresiones.get("Paginas"),this.modificarPag.getText().toString())){
-            error = true;
+        if(validarDatos(this.columnasExpresiones.get("Paginas"),this.modificarPag.getText().toString())){
+            this.libroSeleccionado.setPaginas(Integer.valueOf(this.modificarPag.getText().toString()));
+            this.modificarPag.setText("");
+        }else if(!this.modificarPag.getText().toString().isEmpty()){
+            this.modificarPag.setText("");
         }
-        if(!validarDatos(this.columnasExpresiones.get("Fecha"),this.modificarFecha.getText().toString())){
-            error = true;
+        if(validarDatos(this.columnasExpresiones.get("Fecha"),this.modificarFecha.getText().toString())){
+            this.libroSeleccionado.setFecha(this.modificarFecha.getText().toString());
+            this.modificarFecha.setText("");
+        }else if(!this.modificarFecha.getText().toString().isEmpty()){
+            this.modificarFecha.setText("");
         }
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+        Call<Void> call = api.actualizarLibro(this.libroSeleccionado.getTitulo(),this.libroSeleccionado);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                System.out.println("hola");
+                Toast.makeText(context,"Modificacion correcta",Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+
     }
     /**
      * Método que se encarga de validar los datos para que se cumpla la

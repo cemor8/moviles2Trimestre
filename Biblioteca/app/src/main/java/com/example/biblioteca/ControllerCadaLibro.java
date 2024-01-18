@@ -1,5 +1,6 @@
 package com.example.biblioteca;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -10,6 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ControllerCadaLibro extends AppCompatActivity {
     private ArrayList<Libro> libros;
     private TextView mostrarTitulo;
@@ -17,11 +22,13 @@ public class ControllerCadaLibro extends AppCompatActivity {
     private TextView mostrarPag;
     private TextView mostrarFecha;
     private Libro libroSeleccionado;
+    private Context referencia;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cada_libro);
         Intent intent = getIntent();
+        referencia = getApplicationContext();
         if (intent.hasExtra("libros")) {
             this.libros = (ArrayList<Libro>) intent.getSerializableExtra("libros");
         }
@@ -56,11 +63,41 @@ public class ControllerCadaLibro extends AppCompatActivity {
         startActivity(intent);
     }
     public void eliminar(View view){
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+        Call<Void> call = api.eliminarLibro(this.libroSeleccionado.getTitulo());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                System.out.println("respuesta");
+                if (response.isSuccessful()) {
+                    libros.remove(libroSeleccionado);
+                    Intent intent = new Intent(referencia, ControllerListaLibros.class);
+                    intent.putExtra("libros",libros);
+                    startActivity(intent);
+
+                }else {
+                    System.out.println("Error en server");
+                    int statusCode = response.code();
+                    System.out.println(statusCode);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable err) {
+                System.out.println("Error al intentar enviar datos");
+                System.out.println(err.getMessage());
+            }
+        });
+        /*
         OperacionesBase operacionesBase = OperacionesBase.getInstance(this);
         operacionesBase.borrarLibro(this.libroSeleccionado.getTitulo());
         this.libros.remove(this.libroSeleccionado);
+
+
         Intent intent = new Intent(this, ControllerListaLibros.class);
         intent.putExtra("libros",this.libros);
         startActivity(intent);
+         */
     }
 }
