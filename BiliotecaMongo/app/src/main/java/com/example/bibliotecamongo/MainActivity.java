@@ -3,21 +3,52 @@ package com.example.bibliotecamongo;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.client.MongoDatabase;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+
 
 public class MainActivity extends AppCompatActivity {
-    String appID = "biblioteca-nxels";
+    private String url= "https://eu-west-2.aws.data.mongodb-api.com/app/biblioteca-nxels/endpoint/getLibros"
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        MongoClientURI uri = new MongoClientURI("mongodb+srv://<usuario>:<contraseña>@cluster.mongodb.net/test");
-        MongoClient mongoClient = new MongoClient(uri);
+        URL url1;
+        try {
+             url1 = new URL(url);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+        URLConnection urlConnection;
+        try {
+            urlConnection = url1.openConnection();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        InputStreamReader inputStreamReader;
+        try {
+            inputStreamReader = new InputStreamReader(urlConnection.getInputStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        BufferedReader bufferedReader;
+        bufferedReader = new BufferedReader(inputStreamReader);
+        StringBuilder stringBuilder = new StringBuilder();
+        String linea="";
+        while (true) {
+            try {
+                if (!((linea = bufferedReader.readLine())!=null)) break;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            stringBuilder.append(linea);
+        }
+        System.out.println(stringBuilder.toString());
 
     }
 }
