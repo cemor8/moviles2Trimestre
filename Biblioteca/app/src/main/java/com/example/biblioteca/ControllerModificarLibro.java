@@ -63,10 +63,12 @@ public class ControllerModificarLibro extends AppCompatActivity {
         startActivity(intent);
     }
     public void guardar(View view){
-
+        String tituloInicial = this.libroSeleccionado.getTitulo();
+        boolean cambiado = false;
         if(validarDatos(this.columnasExpresiones.get("Titulo"),this.modificarTitulo.getText().toString())){
             this.libroSeleccionado.setTitulo(this.modificarTitulo.getText().toString());
             this.modificarTitulo.setText("");
+            cambiado = true;
         }else if(!this.modificarTitulo.getText().toString().isEmpty()){
             this.modificarTitulo.setText("");
         }
@@ -74,25 +76,31 @@ public class ControllerModificarLibro extends AppCompatActivity {
         if(validarDatos(this.columnasExpresiones.get("Autor"),this.modificarAutor.getText().toString())){
             this.libroSeleccionado.setAutor(this.modificarAutor.getText().toString());
             this.modificarAutor.setText("");
+            cambiado = true;
         }else if(!this.modificarAutor.getText().toString().isEmpty()){
             this.modificarAutor.setText("");
         }
         if(validarDatos(this.columnasExpresiones.get("Paginas"),this.modificarPag.getText().toString())){
             this.libroSeleccionado.setPaginas(Integer.valueOf(this.modificarPag.getText().toString()));
             this.modificarPag.setText("");
+            cambiado = true;
         }else if(!this.modificarPag.getText().toString().isEmpty()){
             this.modificarPag.setText("");
         }
         if(validarDatos(this.columnasExpresiones.get("Fecha"),this.modificarFecha.getText().toString())){
             this.libroSeleccionado.setFecha(this.modificarFecha.getText().toString());
             this.modificarFecha.setText("");
+            cambiado = true;
         }else if(!this.modificarFecha.getText().toString().isEmpty()){
             this.modificarFecha.setText("");
         }
+        if(!cambiado){
+            return;
+        }
         Api api = ConexionRetrofit.getConexion().create(Api.class);
-        Call<Void> call = api.actualizarLibro(this.libroSeleccionado.getTitulo(),this.libroSeleccionado);
+        Call<Void> call = api.actualizarLibro(tituloInicial,this.libroSeleccionado);
         call.enqueue(new Callback<Void>() {
-            @Override
+            @Override   
             public void onResponse(Call<Void> call, Response<Void> response) {
                 System.out.println("hola");
                 Toast.makeText(context,"Modificacion correcta",Toast.LENGTH_LONG).show();

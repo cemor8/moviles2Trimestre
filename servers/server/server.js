@@ -30,17 +30,6 @@ const esquema = new Schema({
 
 const libro = model('libro', esquema);
 
-
-app.post('/api/libros', async (req, res) => {
-    try {
-        let libro = new libro(req.body);
-        let guardarLibro = await libro.save();
-        res.status(201).json(guardarLibro);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-});
-
 app.get('/api/libros', async (req, res) => {
     try {
         let listaLibros = await libro.find();
@@ -50,21 +39,35 @@ app.get('/api/libros', async (req, res) => {
     }
 });
 
+
 app.put('/api/libros/:titulo', async (req, res) => {
     try {
-      let libroModificar = await libro.findByIdAndUpdate(req.params.titulo, req.body, { new: true });
-      res.status(200).json(libroModificar);
+        console.log(req.body);
+        await libro.findOneAndUpdate({ titulo: req.params.titulo }, req.body);
+        res.status(200);
     } catch (err) {
-      res.status(500).json({ message: err.message });
+        console.log(err.message);
+        res.status(500).json({ message: err.message });
     }
 });
 
+app.post('/api/libros', async (req, res) => {
+    try {
+        let libro = new libro(req.body);
+        await libro.save();
+        res.status(201);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+
 app.delete('/api/libros/:titulo', async (req, res) => {
     try {
-      let libroBorrar = await libro.findByIdAndDelete(req.params.titulo);
-      res.status(200).json(libroBorrar);
+        await libro.findOneAndDelete({ titulo: req.params.titulo }, req.body);
+        res.status(200);
     } catch (err) {
-      res.status(500).json({ message: err.message });
+        res.status(500).json({ message: err.message });
     }
 });
 

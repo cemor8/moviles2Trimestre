@@ -40,7 +40,7 @@ app.post('/api/libros', (req, res) => {
         fecha_lanzamiento: req.body.fecha,
     };
 
-    const sql = 'INSERT INTO libro SET ?';
+    const sql = 'insert into libro set ?';
 
     base.query(sql, libro, (err, result) => {
         if (err) {
