@@ -10,14 +10,21 @@
             android:text="Ver Libros"
             android:layout_width="183dp"
             android:layout_height="79dp" android:id="@+id/button"
-            android:layout_marginEnd="114dp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="110dp" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginBottom="38dp" app:layout_constraintBottom_toTopOf="@+id/button2"
             android:onClick="ver" android:backgroundTint="@color/azulPrincipal"/>
     <Button
             android:text="Crear Libro"
             android:layout_width="183dp"
             android:layout_height="79dp" android:id="@+id/button2"
-            android:layout_marginEnd="114dp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="110dp" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="156dp"
             android:onClick="crear" android:backgroundTint="@color/azulPrincipal"/>
+    <TextView
+            android:text="IRead"
+            android:layout_width="159dp"
+            android:layout_height="76dp" android:id="@+id/textView13"
+            android:textColor="@color/white" android:textSize="60dp"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="102dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="130dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

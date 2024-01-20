@@ -32,21 +32,17 @@ app.get('/api/libros', (req, res) => {
 });
 
 app.post('/api/libros', (req, res) => {
-    console.log(req.body);
-    const libro = {
-        titulo: req.body.titulo,
-        autor: req.body.autor,
-        numero_paginas: req.body.paginas,
-        fecha_lanzamiento: req.body.fecha,
-    };
+    let libro = req.body;
+    console.log(libro);
+    let sql = 'INSERT INTO libro (titulo, autor, paginas, fecha) VALUES (?, ?, ?, ?)';
+    let valores = [libro.titulo, libro.autor, libro.paginas, libro.fecha];
 
-    const sql = 'insert into libro set ?';
-
-    base.query(sql, libro, (err, result) => {
+    base.query(sql, valores, (err, result) => {
         if (err) {
+            console.log(err.message);
             throw err;
         }
-        res.send('libro creado');
+        res.sendStatus(200);
     });
 });
 
@@ -55,8 +51,8 @@ app.put('/api/libros/:titulo', (req, res) => {
     const updatedItem = {
         titulo: req.body.titulo,
         autor: req.body.autor,
-        numero_paginas: req.body.paginas,
-        fecha_lanzamiento: req.body.fecha,
+        paginas: req.body.paginas,
+        fecha: req.body.fecha,
     };
     const sql = `update libro set ? where titulo = "${titulo}"`;
     base.query(sql, updatedItem, (err, result) => {

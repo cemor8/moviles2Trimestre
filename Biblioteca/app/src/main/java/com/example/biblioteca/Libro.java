@@ -28,7 +28,9 @@ public class Libro implements Serializable{
     }
 
     public String getFecha() {
-        return fecha;
+        String[] partesFecha = this.fecha.split("-");
+        String fechaInvertida = partesFecha[2] + "-" + partesFecha[1] + "-" + partesFecha[0];
+        return fechaInvertida;
     }
 
     public void setTitulo(String titulo) {

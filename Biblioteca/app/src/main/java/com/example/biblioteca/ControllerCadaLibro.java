@@ -45,10 +45,13 @@ public class ControllerCadaLibro extends AppCompatActivity {
         this.mostrarAutor = findViewById(R.id.mostrarAutor);
         this.mostrarPag = findViewById(R.id.mostrarPag);
         this.mostrarFecha = findViewById(R.id.mostrarFecha);
+
         this.mostrarTitulo.setText(this.libroSeleccionado.getTitulo());
         this.mostrarAutor.setText(this.libroSeleccionado.getAutor());
-        this.mostrarFecha.setText(this.libroSeleccionado.getFecha());
-        this.mostrarPag.setText(String.valueOf(this.libroSeleccionado.getPaginas()));
+        String fecha = getString(R.string.fecha,this.libroSeleccionado.getFecha());
+        this.mostrarFecha.setText(fecha);
+        String pagina = getString(R.string.paginas,this.libroSeleccionado.getPaginas().toString());
+        this.mostrarPag.setText(pagina);
 
     }
     public void volver(View view){
@@ -89,15 +92,5 @@ public class ControllerCadaLibro extends AppCompatActivity {
                 System.out.println(err.getMessage());
             }
         });
-        /*
-        OperacionesBase operacionesBase = OperacionesBase.getInstance(this);
-        operacionesBase.borrarLibro(this.libroSeleccionado.getTitulo());
-        this.libros.remove(this.libroSeleccionado);
-
-
-        Intent intent = new Intent(this, ControllerListaLibros.class);
-        intent.putExtra("libros",this.libros);
-        startActivity(intent);
-         */
     }
 }

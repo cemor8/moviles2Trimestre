@@ -31,8 +31,8 @@ public class ControllerModificarLibro extends AppCompatActivity {
     Map<String, String> columnasExpresiones = new HashMap<String, String>() {
         {
             put("Paginas", "^\\d{1,5}$");
-            put("Titulo", "^[\\w\\s.,!?-]{1,100}$");
-            put("Autor", "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$");
+            put("Titulo", "^[\\w\\s.,!?-]{1,30}$");
+            put("Autor", "^(?=.*[a-z])(?=.*[A-Z]).{4,30}$");
             put("Fecha", "^\\d{4}-\\d{2}-\\d{2}$");
         }
 
@@ -64,37 +64,56 @@ public class ControllerModificarLibro extends AppCompatActivity {
     }
     public void guardar(View view){
         String tituloInicial = this.libroSeleccionado.getTitulo();
-        boolean cambiado = false;
-        if(validarDatos(this.columnasExpresiones.get("Titulo"),this.modificarTitulo.getText().toString())){
-            this.libroSeleccionado.setTitulo(this.modificarTitulo.getText().toString());
+        boolean error = false;
+
+        if(!this.modificarTitulo.getText().toString().isEmpty() && !validarDatos(this.columnasExpresiones.get("Titulo"),this.modificarTitulo.getText().toString())){
             this.modificarTitulo.setText("");
-            cambiado = true;
-        }else if(!this.modificarTitulo.getText().toString().isEmpty()){
-            this.modificarTitulo.setText("");
+            System.out.println("titulo mal");
+            error = true;
         }
 
-        if(validarDatos(this.columnasExpresiones.get("Autor"),this.modificarAutor.getText().toString())){
-            this.libroSeleccionado.setAutor(this.modificarAutor.getText().toString());
+        if(!this.modificarAutor.getText().toString().isEmpty() &&!validarDatos(this.columnasExpresiones.get("Autor"),this.modificarAutor.getText().toString())){
+            System.out.println("autor mal");
             this.modificarAutor.setText("");
-            cambiado = true;
-        }else if(!this.modificarAutor.getText().toString().isEmpty()){
-            this.modificarAutor.setText("");
+            error = true;
         }
-        if(validarDatos(this.columnasExpresiones.get("Paginas"),this.modificarPag.getText().toString())){
-            this.libroSeleccionado.setPaginas(Integer.valueOf(this.modificarPag.getText().toString()));
+
+        if(!this.modificarPag.getText().toString().isEmpty() &&!validarDatos(this.columnasExpresiones.get("Paginas"),this.modificarPag.getText().toString())){
+            System.out.println("pagina mal");
             this.modificarPag.setText("");
-            cambiado = true;
-        }else if(!this.modificarPag.getText().toString().isEmpty()){
-            this.modificarPag.setText("");
+            error = true;
         }
-        if(validarDatos(this.columnasExpresiones.get("Fecha"),this.modificarFecha.getText().toString())){
+        if(!this.modificarFecha.getText().toString().isEmpty() &&!validarDatos(this.columnasExpresiones.get("Fecha"),this.modificarFecha.getText().toString())){
+            System.out.println("fecha mal");
+            this.modificarFecha.setText("");
+            error = true;
+        }
+        if(error){
+            Toast.makeText(context,"Datos inválidos",Toast.LENGTH_LONG).show();
+            return;
+        }
+        boolean cambiado = false;
+        if(!this.modificarTitulo.getText().toString().isEmpty()){
+            this.libroSeleccionado.setTitulo(this.modificarTitulo.getText().toString());
+            cambiado = true;
+        }
+        if(!this.modificarFecha.getText().toString().isEmpty()){
             this.libroSeleccionado.setFecha(this.modificarFecha.getText().toString());
-            this.modificarFecha.setText("");
             cambiado = true;
-        }else if(!this.modificarFecha.getText().toString().isEmpty()){
-            this.modificarFecha.setText("");
         }
-        if(!cambiado){
+        if(!this.modificarAutor.getText().toString().isEmpty()){
+            this.libroSeleccionado.setAutor(this.modificarAutor.getText().toString());
+            cambiado = true;
+        }
+        if(!this.modificarPag.getText().toString().isEmpty()){
+            this.libroSeleccionado.setPaginas(Integer.valueOf(this.modificarPag.getText().toString()));
+            cambiado = true;
+        }
+        this.modificarPag.setText("");
+        this.modificarFecha.setText("");
+        this.modificarTitulo.setText("");
+        this.modificarAutor.setText("");
+        if (!cambiado){
             return;
         }
         Api api = ConexionRetrofit.getConexion().create(Api.class);
@@ -124,11 +143,5 @@ public class ControllerModificarLibro extends AppCompatActivity {
         Pattern patron = Pattern.compile(patronCumplir);
         Matcher matcher = patron.matcher(textoBuscar);
         return matcher.matches();
-    }
-
-    @Override
-    protected void onDestroy() {
-        //operacionesBase.cerrar();
-        super.onDestroy();
     }
 }
