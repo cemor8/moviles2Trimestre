@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Base.Theme.BibliotecaMongo" parent="Theme.Material3.DayNight.NoActionBar">
+    <color name="azulPrincipal">#1a3c7d</color>
+    <color name="azulSecundario">#06296b</color>
+    <color name="black">#FF000000</color>
+    <color name="negroPrincipal">#101217</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="app_name">IRead</string>
+    <string name="fecha">Fecha:  %1$s</string>
+    <string name="paginas">Páginas:  %1$s</string>
+    <style name="Base.Theme.Biblioteca" parent="Theme.Material3.DayNight.NoActionBar">
         
         
     </style>
-    <style name="Theme.BibliotecaMongo" parent="Base.Theme.BibliotecaMongo"/>
+    <style name="Theme.Biblioteca" parent="Base.Theme.Biblioteca"/>
 </resources>

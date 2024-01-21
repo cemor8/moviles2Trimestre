@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-
-rootProject.name = "BibliotecaMongo"
+rootProject.name = "Biblioteca"
 include(":app")
+ 
