@@ -22,7 +22,7 @@ public class ControllerListaLibros extends AppCompatActivity {
         if (intent.hasExtra("libros")) {
             this.libros =(ArrayList<Libro>) intent.getSerializableExtra("libros");
         }
-        System.out.println(libros);
+        // crear un textview para cada libro
         for (int i = 0; i < this.libros.size(); i++) {
             TextView textView = new TextView(this);
             textView.setText(this.libros.get(i).getTitulo());
@@ -45,11 +45,17 @@ public class ControllerListaLibros extends AppCompatActivity {
             linearLayout.addView(textView);
         }
     }
+    /**
+     * Método que se encarga de volver a la anterior actividad
+     * */
     public void volver(View view){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
-
+    /**
+     * Método que abre la actividad donde se muestra cada libro, con los datos
+     * del libro seleccionado
+     * */
     private void abrirDetalleLibro(int posicionLibro) {
         Intent intent = new Intent(this, ControllerCadaLibro.class);
         intent.putExtra("posicionLibro", posicionLibro);

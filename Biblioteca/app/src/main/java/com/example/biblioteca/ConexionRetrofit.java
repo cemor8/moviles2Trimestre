@@ -8,8 +8,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ConexionRetrofit {
     private static Retrofit instancia;
-    private static final String url = "http://10.0.2.2:3000";
-
+    private static String url = "http://10.0.2.2:3000";
+    /**
+     * Método que devuelve una instancia de Retrofit para hacer conexiones al servidor
+     * express, especifica un objeto json para la deserializacion de documentos json a objetos libro
+     * */
     public static Retrofit getConexion() {
         if (instancia == null) {
             Gson gson = new GsonBuilder()

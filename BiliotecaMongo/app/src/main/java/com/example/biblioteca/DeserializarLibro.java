@@ -15,8 +15,9 @@ public class DeserializarLibro implements JsonDeserializer<Libro> {
         String titulo = contenidoJson.get("titulo").getAsString();
         String fecha = contenidoJson.get("fecha").getAsString();
         Integer paginas = contenidoJson.get("paginas").getAsInt();
+        String autor = contenidoJson.get("autor").getAsString();
 
 
-        return new Libro(titulo,null,paginas,fecha);
+        return new Libro(titulo,autor,paginas,fecha);
     }
 }

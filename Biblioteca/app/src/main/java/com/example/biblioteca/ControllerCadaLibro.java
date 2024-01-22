@@ -36,11 +36,6 @@ public class ControllerCadaLibro extends AppCompatActivity {
         if(intent.hasExtra("posicionLibro")){
             this.libroSeleccionado = this.libros.get(intent.getIntExtra("posicionLibro",0));
         }
-        System.out.println(this.libroSeleccionado);
-        System.out.println(this.libroSeleccionado.getAutor());
-        System.out.println(this.libroSeleccionado.getFecha());
-        System.out.println(this.libroSeleccionado.getTitulo());
-        System.out.println(this.libroSeleccionado.getPaginas());
         this.mostrarTitulo = findViewById(R.id.mostrarTitulo);
         this.mostrarAutor = findViewById(R.id.mostrarAutor);
         this.mostrarPag = findViewById(R.id.mostrarPag);
@@ -54,17 +49,27 @@ public class ControllerCadaLibro extends AppCompatActivity {
         this.mostrarPag.setText(pagina);
 
     }
+    /**
+     * Método que permite volver a la anterior actividad
+     * */
     public void volver(View view){
         Intent intent = new Intent(this, ControllerListaLibros.class);
         intent.putExtra("libros",this.libros);
         startActivity(intent);
     }
+    /**
+     * Método que se encarga de cargar la actividad de modificacion de libros
+     * */
     public void modificar(View view){
         Intent intent = new Intent(this, ControllerModificarLibro.class);
         intent.putExtra("posicionLibro", this.libros.indexOf(this.libroSeleccionado));
         intent.putExtra("libros",this.libros);
         startActivity(intent);
     }
+    /**
+     * Método que se encarga de eliminar un libro haciendo una peticion al servidor express, si la peticion
+     * es satisfactoria y es eliminado el contenido de la base de datos, luego se elimina de la lista de libros
+     * */
     public void eliminar(View view){
         Api api = ConexionRetrofit.getConexion().create(Api.class);
         Call<Void> call = api.eliminarLibro(this.libroSeleccionado.getTitulo());

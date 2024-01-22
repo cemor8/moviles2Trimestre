@@ -9,6 +9,10 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 
 public class DeserializarLibro implements JsonDeserializer<Libro> {
+    /**
+     * Método para deserializar los objetos json en objetos Libro,
+     * modifico la fecha para obeter solo el dia - mes - año.
+     * */
     @Override
     public Libro deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject contenidoJson = json.getAsJsonObject();
@@ -19,16 +23,6 @@ public class DeserializarLibro implements JsonDeserializer<Libro> {
         String titulo = contenidoJson.get("titulo").getAsString();
         String autor = contenidoJson.get("autor").getAsString();
         Integer paginas = contenidoJson.get("paginas").getAsInt();
-
-
-        /*
-        String titulo = contenidoJson.get("titulo").getAsString();
-        String fecha = contenidoJson.get("fecha").getAsString();
-        Integer paginas = contenidoJson.get("paginas").getAsInt();
-
-         */
-
-
         return new Libro(titulo,autor,paginas,año);
     }
 }

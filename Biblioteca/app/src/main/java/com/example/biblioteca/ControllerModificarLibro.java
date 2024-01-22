@@ -56,12 +56,20 @@ public class ControllerModificarLibro extends AppCompatActivity {
         this.modificarTitulo = findViewById(R.id.modificarTitulo);
 
     }
+    /**
+     * Método que permite volver a la anterior actividad
+     * */
     public void volver(View view){
         Intent intent = new Intent(this, ControllerCadaLibro.class);
         intent.putExtra("posicionLibro", this.libros.indexOf(this.libroSeleccionado));
         intent.putExtra("libros",this.libros);
         startActivity(intent);
     }
+    /**
+     * Método que se encarga de actualizar un libro, comprueba que los datos sean corerctos, si hay algo mal, no hace la
+     * modificacion, si los datos estan correctos, hace una peticion al servidor express para modificar el libro, una vez modificado
+     * muestra un mensaje de modificacion correcta.
+     * */
     public void guardar(View view){
         String tituloInicial = this.libroSeleccionado.getTitulo();
         boolean error = false;

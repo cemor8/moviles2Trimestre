@@ -20,16 +20,24 @@ mongoose.connection.on('error', (err) => {
 });
 
 const Schema = mongoose.Schema;
-const model = mongoose.model;
+const modelo = mongoose.model;
 
+//Defino la estructura que van a tener los documentos enviados a la aplicación
 const esquema = new Schema({
     fecha: String,
     paginas: Number,
-    titulo: String
+    titulo: String,
+    autor: String
 });
+// modelo vincula esquema con una coleccion para buscar documentos de ese formato en 
+//esa coleccion
+const libro = modelo('libro', esquema);
 
-const libro = model('libro', esquema);
-
+/**
+ * Obtiene la lista de libros de la coleccion libro y 
+ * la devuelve como una lista de objetos json.
+ * @returns
+ */
 app.get('/api/libros', async (req, res) => {
     try {
         let listaLibros = await libro.find();
@@ -39,34 +47,50 @@ app.get('/api/libros', async (req, res) => {
     }
 });
 
-
+/**
+ * Actualiza un libro dependiendo del titulo que le 
+ * le pase con el objeto que recibe. Devuelve un estado 200
+ * si todo es correcto
+ * @returns
+ */
 app.put('/api/libros/:titulo', async (req, res) => {
     try {
         console.log(req.body);
         await libro.findOneAndUpdate({ titulo: req.params.titulo }, req.body);
-        res.status(200);
+        res.sendStatus(200);
     } catch (err) {
         console.log(err.message);
         res.status(500).json({ message: err.message });
     }
 });
-
+/**
+ * Introduce un nuevo libro en la base de datos con los
+ * datos que obtiene en el body, devuelve un estado 201
+ * si todo es correcto
+ * @returns
+ */
 app.post('/api/libros', async (req, res) => {
     try {
-        let libro = new libro(req.body);
-        await libro.save();
-        res.status(201);
+        await new libro(req.body).save();
+        res.sendStatus(201);
     } catch (err) {
+        console.log(err.message)
         res.status(500).json({ message: err.message });
     }
 });
 
-
+/**
+ * Elimina un libro que contenga el indice "titulo" igual
+ * al especificado en la peticion, devuelve un estado 200
+ * si todo es correcto.
+ */
 app.delete('/api/libros/:titulo', async (req, res) => {
     try {
-        await libro.findOneAndDelete({ titulo: req.params.titulo }, req.body);
-        res.status(200);
+        await libro.findOneAndDelete({ titulo: req.params.titulo });
+        console.log("bien");
+        res.sendStatus(200);
     } catch (err) {
+        console.log(err.message)
         res.status(500).json({ message: err.message });
     }
 });

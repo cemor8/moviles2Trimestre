@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -117,16 +118,16 @@ public class ControllerModificarLibro extends AppCompatActivity {
             return;
         }
         Api api = ConexionRetrofit.getConexion().create(Api.class);
-        Call<Void> call = api.actualizarLibro(tituloInicial,this.libroSeleccionado);
-        call.enqueue(new Callback<Void>() {
+        Call<ResponseBody> call = api.actualizarLibro(tituloInicial,this.libroSeleccionado);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override   
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 System.out.println("hola");
                 Toast.makeText(context,"Modificacion correcta",Toast.LENGTH_LONG).show();
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
             }
         });

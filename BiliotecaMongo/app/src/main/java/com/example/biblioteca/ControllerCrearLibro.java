@@ -93,14 +93,15 @@ public class ControllerCrearLibro extends AppCompatActivity {
         this.introducirPaginas.setText("");
         this.introducirTitulo.setText("");
         Toast.makeText(this,"Libro Creado Con Éxito",Toast.LENGTH_LONG).show();
-        Api api = ConexionRetrofit.getConexion().create(Api.class);
 
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
         Call<ResponseBody> call = api.meterLibro(libroCreado);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 System.out.println("respuesta");
                 if (response.isSuccessful()) {
+                    System.out.println("bien");
                     libros.add(libroCreado);
 
                 }else {
@@ -110,7 +111,6 @@ public class ControllerCrearLibro extends AppCompatActivity {
 
                 }
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable err) {
                 System.out.println("Error al intentar enviar datos");

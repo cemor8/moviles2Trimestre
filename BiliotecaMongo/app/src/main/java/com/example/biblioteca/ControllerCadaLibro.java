@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,11 +37,7 @@ public class ControllerCadaLibro extends AppCompatActivity {
         if(intent.hasExtra("posicionLibro")){
             this.libroSeleccionado = this.libros.get(intent.getIntExtra("posicionLibro",0));
         }
-        System.out.println(this.libroSeleccionado);
-        System.out.println(this.libroSeleccionado.getAutor());
-        System.out.println(this.libroSeleccionado.getFecha());
-        System.out.println(this.libroSeleccionado.getTitulo());
-        System.out.println(this.libroSeleccionado.getPaginas());
+
         this.mostrarTitulo = findViewById(R.id.mostrarTitulo);
         this.mostrarAutor = findViewById(R.id.mostrarAutor);
         this.mostrarPag = findViewById(R.id.mostrarPag);
@@ -66,6 +63,7 @@ public class ControllerCadaLibro extends AppCompatActivity {
         startActivity(intent);
     }
     public void eliminar(View view){
+        System.out.println(libroSeleccionado.getTitulo());
         Api api = ConexionRetrofit.getConexion().create(Api.class);
         Call<Void> call = api.eliminarLibro(this.libroSeleccionado.getTitulo());
         call.enqueue(new Callback<Void>() {
@@ -73,6 +71,7 @@ public class ControllerCadaLibro extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 System.out.println("respuesta");
                 if (response.isSuccessful()) {
+                    System.out.println("bien");
                     libros.remove(libroSeleccionado);
                     Intent intent = new Intent(referencia, ControllerListaLibros.class);
                     intent.putExtra("libros",libros);

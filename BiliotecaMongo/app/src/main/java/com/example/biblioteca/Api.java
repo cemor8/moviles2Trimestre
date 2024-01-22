@@ -17,7 +17,7 @@ public interface Api {
     @POST("/api/libros")
     Call<ResponseBody> meterLibro(@Body Libro nuevoLibro);
     @PUT("/api/libros/{titulo}")
-    Call<Void> actualizarLibro(@Path("titulo") String titulo, @Body Libro libro);
+    Call<ResponseBody> actualizarLibro(@Path("titulo") String titulo, @Body Libro libro);
     @DELETE("/api/libros/{titulo}")
     Call<Void> eliminarLibro(@Path("titulo") String titulo);
 }

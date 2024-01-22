@@ -53,7 +53,10 @@ public class ControllerCrearLibro extends AppCompatActivity {
         this.introducirFecha = findViewById(R.id.introducirFecha);
     }
     /**
-     * Método que se encarga de crear un libro, comprueba el texto
+     * Método que se encarga de crear un libro, comprueba que los datos sean correctos antes de
+     * enviarlos al servidor, tambien comprueba que no exista un libro con el mismo titulo, si esto
+     * es satisfactorio, hace una peticion al servidor express para crear el libro, una vez creado el libro en la
+     * base de datos, lo añade a la lista de libros
      * */
     public void crearLibro(View view){
         System.out.println("creando el libro");
@@ -119,6 +122,9 @@ public class ControllerCrearLibro extends AppCompatActivity {
         });
 
     }
+    /**
+     * Método que permite volver a la anterior actividad
+     * */
     public void volver(View view){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
