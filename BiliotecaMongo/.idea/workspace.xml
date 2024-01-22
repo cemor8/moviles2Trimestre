@@ -10,29 +10,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5840307f-d15f-4de5-a612-820b92cbf323" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gradle/8.0/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/executionHistory/executionHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.0/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.0/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.0/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.0/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/biblioteca/Api.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/biblioteca/Api.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/biblioteca/ConexionRetrofit.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/biblioteca/ConexionRetrofit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/biblioteca/ControllerCadaLibro.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/biblioteca/ControllerCadaLibro.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/biblioteca/ControllerCrearLibro.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/biblioteca/ControllerCrearLibro.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/biblioteca/ControllerModificarLibro.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/biblioteca/ControllerModificarLibro.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/biblioteca/DeserializarLibro.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/biblioteca/DeserializarLibro.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../servers/server/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/../servers/server/server.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../servers/serverMysql/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/../servers/serverMysql/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\carlos\.android\avd\Pixel_3a_API_34_extension_level_7_x86_64.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\cmorbla\.android\avd\Pixel_2_API_24.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -71,7 +61,8 @@
     "RunOnceActivity.cidr.known.project.marker": "true",
     "ScreenRecorder.SavePath": "C:\\Users\\carlos\\Desktop",
     "cidr.known.project.marker": "true",
-    "last_opened_file_path": "C:/Users/carlos/Desktop/servicios2Trimestre/ej4"
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/Users/cmorbla/Desktop/interfaces2Trimestre/Biblioteca"
   }
 }]]></component>
   <component name="RunManager">
@@ -110,6 +101,19 @@
       <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
       <method v="2">
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="BibliotecaMongo" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="BibliotecaMongo" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
       </method>
     </configuration>
   </component>
