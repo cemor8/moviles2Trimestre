@@ -3,8 +3,8 @@ use biblioteca;
 create table libro(
 	titulo varchar(30) not null,
     autor varchar(30),
-    numero_paginas int,
-    fecha_lanzamiento date,
+    paginas int,
+    fecha date,
     primary key (titulo)
 );
 insert into libro values("Dune","Frank Herbert",412,"1965-05-02");
