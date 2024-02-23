@@ -2,4 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="colorItemSelected">#FF0000</color>
+    <color name="colorItemUnselected">#000000</color>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color> <!-- Este es el color que quieres cambiar -->
+    <color name="selectedItemColor">#008577</color> <!-- Nuevo color para el ítem seleccionado -->
+    <color name="unselectedItemColor">#5D4037</color>
 </resources>

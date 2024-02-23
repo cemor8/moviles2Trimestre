@@ -1,11 +1,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/action_a"
-        android:title="Opción A" />
+        android:id="@+id/menusDia"
+        android:icon="@drawable/menudia"
+        android:title="Menus" />
     <item
-        android:id="@+id/action_b"
-        android:title="Opción B" />
+        android:id="@+id/platos"
+        android:icon="@drawable/platos"
+        android:title="Platos" />
     <item
-        android:id="@+id/action_c"
-        android:title="Opción C" />
+        android:id="@+id/bebidas"
+        android:icon="@drawable/bebidas"
+        android:title="Bebidas" />
+    <item
+        android:id="@+id/pedido"
+        android:icon="@drawable/pedido"
+        android:title="Pedido" />
 </menu>
