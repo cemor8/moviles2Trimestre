@@ -2,7 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="colorItemSelected">#FF0000</color>
+    <color name="fondo">#313639</color>
+    <color name="fondo2">#3d484e</color>
+    <color name="btn">#e2574d</color>
+    <color name="acento">#ff355b</color>
+
     <color name="colorItemUnselected">#000000</color>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
