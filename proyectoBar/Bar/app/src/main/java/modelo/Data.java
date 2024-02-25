@@ -1,6 +1,10 @@
 package modelo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.example.bar.Api;
 
@@ -10,74 +14,99 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Data {
+public class Data implements Parcelable {
     ArrayList<Bebida> listaBebidasRestaurante = new ArrayList<>();
     ArrayList<Plato> listaPlatosRestaurante = new ArrayList<>();
-    ArrayList<Menu> listaMenusRestaurante = new ArrayList<>();
+    private Mesa mesaSeleccionada;
+    private Menu menuDia;
+    private Menu construirMenu;
+    /*
+
     ArrayList<Mesa> mesasRestaurante = new ArrayList<>();
     ArrayList<Factura> facturas = new ArrayList<>();
+    */
+
 
     public Data(){
 
     }
-    public void recibirBebidas(){
-        this.listaBebidasRestaurante = new ArrayList<>();
-        Api api = ConexionRetrofit.getConexion().create(Api.class);
-        Call<ArrayList<Bebida>> call = api.getBebidas();
-        call.enqueue(new Callback<ArrayList<Bebida>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Bebida>> call, Response<ArrayList<Bebida>> response) {
-                System.out.println("respuesta");
-                if (response.isSuccessful()) {
-                    System.out.println(response.body());
-                    ArrayList<Bebida> items = (ArrayList<Bebida>) response.body();
-                    listaBebidasRestaurante = items;
-
-
-                }else {
-                    int statusCode = response.code();
-                    System.out.println(statusCode);
-                    System.out.println("respuesta mal");
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<Bebida>> call, Throwable t) {
-                System.out.println("error");
-                System.out.println(t.getMessage());
-            }
-        });
-
+    /**
+     * Método para poder pasar Data entre controladores
+     */
+    protected Data(Parcel in) {
+        this.listaBebidasRestaurante = in.createTypedArrayList(Bebida.CREATOR);
+        this.listaPlatosRestaurante = in.createTypedArrayList(Plato.CREATOR);
+        this.mesaSeleccionada = in.readParcelable(Mesa.class.getClassLoader());
+        this.menuDia = in.readParcelable(Menu.class.getClassLoader());
+        this.construirMenu = in.readParcelable(Menu.class.getClassLoader());
     }
-    public void recibirPlatos(){
-        this.listaPlatosRestaurante = new ArrayList<>();
-        Api api = ConexionRetrofit.getConexion().create(Api.class);
-        Call<ArrayList<Plato>> call = api.getPlatos();
-        call.enqueue(new Callback<ArrayList<Plato>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Plato>> call, Response<ArrayList<Plato>> response) {
-                System.out.println("respuesta");
-                if (response.isSuccessful()) {
-                    System.out.println(response.body());
-                    ArrayList<Plato> items = (ArrayList<Plato>) response.body();
-                    listaPlatosRestaurante = items;
 
+    /**
+     * Método para poder pasar Data entre controladores
+     */
+    public static final Creator<Data> CREATOR = new Creator<Data>() {
+        @Override
+        public Data createFromParcel(Parcel in) {
+            return new Data(in);
+        }
 
-                }else {
-                    int statusCode = response.code();
-                    System.out.println(statusCode);
-                    System.out.println("respuesta mal");
+        @Override
+        public Data[] newArray(int size) {
+            return new Data[size];
+        }
+    };
 
-                }
-            }
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
-            @Override
-            public void onFailure(Call<ArrayList<Plato>> call, Throwable t) {
-                System.out.println("error");
-                System.out.println(t.getMessage());
-            }
-        });
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeTypedList(this.listaBebidasRestaurante);
+        dest.writeTypedList(this.listaPlatosRestaurante);
+        dest.writeParcelable(this.mesaSeleccionada,flags);
+        dest.writeParcelable(this.menuDia,flags);
+        dest.writeParcelable(this.construirMenu,flags);
+    }
 
+    public Mesa getMesaSeleccionada() {
+        return mesaSeleccionada;
+    }
+
+    public void setListaBebidasRestaurante(ArrayList<Bebida> listaBebidasRestaurante) {
+        this.listaBebidasRestaurante = listaBebidasRestaurante;
+    }
+
+    public void setListaPlatosRestaurante(ArrayList<Plato> listaPlatosRestaurante) {
+        this.listaPlatosRestaurante = listaPlatosRestaurante;
+    }
+
+    public void setMesaSeleccionada(Mesa mesaSeleccionada) {
+        this.mesaSeleccionada = mesaSeleccionada;
+    }
+
+    public ArrayList<Bebida> getListaBebidasRestaurante() {
+        return listaBebidasRestaurante;
+    }
+
+    public ArrayList<Plato> getListaPlatosRestaurante() {
+        return listaPlatosRestaurante;
+    }
+
+    public Menu getMenuDia() {
+        return menuDia;
+    }
+
+    public void setMenuDia(Menu menuDia) {
+        this.menuDia = menuDia;
+    }
+
+    public Menu getConstruirMenu() {
+        return construirMenu;
+    }
+
+    public void setConstruirMenu(Menu construirMenu) {
+        this.construirMenu = construirMenu;
     }
 }

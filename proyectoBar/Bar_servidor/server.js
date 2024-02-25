@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(express.urlencoded({
     extended: true
 }));
-const dbURI = 'mongodb+srv://cemor8:12q12q12@cluster0.3yldjuk.mongodb.net/';
+const dbURI = 'mongodb+srv://cemor8:12q12q12@cluster0.3yldjuk.mongodb.net/bar?retryWrites=true&w=majority';
 mongoose.connect(dbURI);
 mongoose.connection.on('connected', () => {
     console.log('Conectado a MongoDB');
@@ -78,7 +78,7 @@ const esquemaFactura= new Schema({
 const mesa = modelo('mesas', esquemaMesa);
 const bebida = modelo("bebidas",esquemaBebida)
 const plato = modelo("platos",esquemaPlato)
-const menusDia = modelo("menusDia",esquemaMenusDia)
+const menusDia = modelo("menusdias",esquemaMenusDia)
 const pedido = modelo("pedidos",esquemaPedidos)
 const factura = modelo("facturas",esquemaFactura)
 
@@ -104,6 +104,7 @@ app.get('/api/bebidas', async (req, res) => {
 app.get('/api/platos', async (req, res) => {
     try {
         let listaPlatos = await plato.find();
+        console.log(listaPlatos)
         res.status(200).json(listaPlatos);
     } catch (err) {
         res.status(500).json({ message: err.message });

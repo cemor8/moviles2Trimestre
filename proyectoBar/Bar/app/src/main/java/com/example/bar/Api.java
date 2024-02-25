@@ -3,6 +3,7 @@ package com.example.bar;
 import java.util.ArrayList;
 
 import modelo.Bebida;
+import modelo.Menu;
 import modelo.Mesa;
 import modelo.Pedido;
 import modelo.Plato;
@@ -23,7 +24,7 @@ public interface Api {
     @GET("/api/platos")
     Call<ArrayList<Plato>> getPlatos();
     @GET("/api/menusDia")
-    Call<ArrayList<Mesa>> getMenus();
+    Call<ArrayList<Menu>> getMenus();
     @GET("/api/pedidos")
     Call<ArrayList<Pedido>> getpedidos();
     @PUT("/api/pedido/{id}")

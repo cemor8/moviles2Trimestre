@@ -8,34 +8,44 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="130dp"
-        android:layout_height="33dp"
+        android:layout_width="204dp"
+        android:layout_height="41dp"
+        android:layout_marginEnd="104dp"
+        android:layout_marginBottom="55dp"
         android:fontFamily="@font/roboto"
         android:text="Nombre de Mesa"
         android:textColor="@color/white"
-        android:textSize="16dp"
-        tools:layout_editor_absoluteX="140dp"
-        tools:layout_editor_absoluteY="282dp" />
+        android:textSize="26dp"
+        app:layout_constraintBottom_toTopOf="@+id/introducirNombreMesa"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <EditText
-        android:id="@+id/editTextText"
-        android:layout_width="213dp"
-        android:layout_height="36dp"
+        android:id="@+id/introducirNombreMesa"
+        android:layout_width="225dp"
+        android:layout_height="55dp"
+        android:layout_marginEnd="93dp"
+        android:layout_marginBottom="37dp"
         android:background="@drawable/edittext"
         android:ems="10"
         android:hint="Escribe aquí..."
         android:inputType="text"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        tools:layout_editor_absoluteX="99dp"
-        tools:layout_editor_absoluteY="382dp" />
+        app:layout_constraintBottom_toTopOf="@+id/btnLogear"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="186dp"
-        android:layout_height="63dp"
-        android:text="Button"
+        android:id="@+id/btnLogear"
+        android:layout_width="225dp"
+        android:layout_height="66dp"
+        android:layout_marginEnd="93dp"
+        android:layout_marginBottom="205dp"
+        android:backgroundTint="@color/acento"
+        android:onClick="login"
+        android:text="Entrar"
+        android:textColorLink="@color/acento"
+        android:textSize="20sp"
         app:cornerRadius="12dp"
-        tools:layout_editor_absoluteX="105dp"
-        tools:layout_editor_absoluteY="506dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
