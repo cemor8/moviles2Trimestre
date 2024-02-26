@@ -1,8 +1,13 @@
 package modelo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
-public class Pedido {
+public class Pedido implements Parcelable {
     private String nombreMesa;
     private Integer precio;
     private ArrayList<Consumicion> consumiciones;
@@ -16,6 +21,29 @@ public class Pedido {
         this.estado = estado;
         this.id = id;
     }
+
+    protected Pedido(Parcel in) {
+        nombreMesa = in.readString();
+        if (in.readByte() == 0) {
+            precio = null;
+        } else {
+            precio = in.readInt();
+        }
+        estado = in.readString();
+        id = in.readInt();
+    }
+
+    public static final Creator<Pedido> CREATOR = new Creator<Pedido>() {
+        @Override
+        public Pedido createFromParcel(Parcel in) {
+            return new Pedido(in);
+        }
+
+        @Override
+        public Pedido[] newArray(int size) {
+            return new Pedido[size];
+        }
+    };
 
     public String getNombreMesa() {
         return nombreMesa;
@@ -55,5 +83,24 @@ public class Pedido {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+
+        dest.writeString(nombreMesa);
+        if (precio == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(precio);
+        }
+        dest.writeString(estado);
+        dest.writeInt(id);
     }
 }

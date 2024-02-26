@@ -20,9 +20,10 @@ public class Data implements Parcelable {
     private Mesa mesaSeleccionada;
     private Menu menuDia;
     private Menu construirMenu;
-    /*
 
     ArrayList<Mesa> mesasRestaurante = new ArrayList<>();
+    private Pedido pedido;
+    /*
     ArrayList<Factura> facturas = new ArrayList<>();
     */
 
@@ -39,6 +40,8 @@ public class Data implements Parcelable {
         this.mesaSeleccionada = in.readParcelable(Mesa.class.getClassLoader());
         this.menuDia = in.readParcelable(Menu.class.getClassLoader());
         this.construirMenu = in.readParcelable(Menu.class.getClassLoader());
+        this.mesasRestaurante = in.createTypedArrayList(Mesa.CREATOR);
+        this.pedido = in.readParcelable(Pedido.class.getClassLoader());
     }
 
     /**
@@ -68,6 +71,8 @@ public class Data implements Parcelable {
         dest.writeParcelable(this.mesaSeleccionada,flags);
         dest.writeParcelable(this.menuDia,flags);
         dest.writeParcelable(this.construirMenu,flags);
+        dest.writeTypedList(this.mesasRestaurante);
+        dest.writeParcelable(this.pedido,flags);
     }
 
     public Mesa getMesaSeleccionada() {
@@ -84,6 +89,14 @@ public class Data implements Parcelable {
 
     public void setMesaSeleccionada(Mesa mesaSeleccionada) {
         this.mesaSeleccionada = mesaSeleccionada;
+    }
+
+    public Pedido getPedido() {
+        return pedido;
+    }
+
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
     }
 
     public ArrayList<Bebida> getListaBebidasRestaurante() {
@@ -108,5 +121,13 @@ public class Data implements Parcelable {
 
     public void setConstruirMenu(Menu construirMenu) {
         this.construirMenu = construirMenu;
+    }
+
+    public ArrayList<Mesa> getMesasRestaurante() {
+        return mesasRestaurante;
+    }
+
+    public void setMesasRestaurante(ArrayList<Mesa> mesasRestaurante) {
+        this.mesasRestaurante = mesasRestaurante;
     }
 }

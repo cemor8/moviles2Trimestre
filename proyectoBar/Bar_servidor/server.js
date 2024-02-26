@@ -73,7 +73,10 @@ const esquemaFactura= new Schema({
 },{
     versionKey: false
 });
-
+const contador = mongoose.model('contadores', new mongoose.Schema({
+    _id: {type: String, required: true},
+    valor: { type: Number, default: 0 }
+}));
 
 const mesa = modelo('mesas', esquemaMesa);
 const bebida = modelo("bebidas",esquemaBebida)
@@ -158,16 +161,6 @@ app.put('/api/mesa:nombre_mesa', async (req, res) => {
 
 //#region post
 
-app.post('/api/pedidos', async (req, res) => {
-    try {
-        await new pedido(req.body).save();
-        res.sendStatus(201);
-    } catch (err) {
-        console.log(err.message)
-        res.status(500).json({ message: err.message });
-    }
-});
-
 app.post('/api/facturas', async (req, res) => {
     try {
         await new factura(req.body).save();
@@ -178,6 +171,25 @@ app.post('/api/facturas', async (req, res) => {
     }
 });
 
+app.post('api/pedidos', async (req, res) => {
+    try {
+        const nextId = await incrementCounter('pedido_id');
+        const nuevoPedido = new Pedido({
+            id: nextId, 
+            nombre_mesa : "",
+            consumiciones: [],
+            precio : 0,
+            estador : "creado",
+        });
+
+        await nuevoPedido.save();
+        res.json(nuevoPedido);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error en el servidor al crear un pedido");
+    }
+});
+
 
 
 //#endregion post
@@ -185,6 +197,14 @@ app.post('/api/facturas', async (req, res) => {
 //#region delete
 //#endregion delete
 
+const incrementCounter = async (collectionName) => {
+    const numero = await contador.findOneAndUpdate(
+      { _id: collectionName },
+      { $inc: { valor: 1 } },
+      { new: true, upsert: true }
+    );
+    return numero.seq;
+  };
 
 app.listen(port, () => {
     console.log("Servidor levantado correctamente en el puerto", port);

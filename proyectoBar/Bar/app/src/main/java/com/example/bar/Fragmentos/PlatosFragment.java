@@ -24,7 +24,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PlatosFragment extends Fragment {
+public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClickListener{
     private Data data;
     public PlatosFragment(){
 
@@ -93,5 +93,12 @@ public class PlatosFragment extends Fragment {
                 System.out.println(t.getMessage());
             }
         });
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        if (this.data.getPedido() == null){
+
+        }
     }
 }
