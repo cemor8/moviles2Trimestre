@@ -12,9 +12,9 @@ public class Menu implements Parcelable {
     private ArrayList<Plato> primeros;
     private ArrayList<Plato> segundos;
     private ArrayList<Bebida> bebidas;
-    private int precio;
+    private Double precio;
 
-    public Menu(String dia, ArrayList<Plato> primeros, ArrayList<Plato> segundos, ArrayList<Bebida> bebidas, int precio) {
+    public Menu(String dia, ArrayList<Plato> primeros, ArrayList<Plato> segundos, ArrayList<Bebida> bebidas, Double precio) {
         this.dia = dia;
         this.primeros = primeros;
         this.segundos = segundos;
@@ -27,7 +27,7 @@ public class Menu implements Parcelable {
         primeros = in.createTypedArrayList(Plato.CREATOR);
         segundos = in.createTypedArrayList(Plato.CREATOR);
         bebidas = in.createTypedArrayList(Bebida.CREATOR);
-        precio = in.readInt();
+        precio = in.readDouble();
     }
 
     public static final Creator<Menu> CREATOR = new Creator<Menu>() {
@@ -58,7 +58,7 @@ public class Menu implements Parcelable {
         return bebidas;
     }
 
-    public int getPrecio() {
+    public Double getPrecio() {
         return precio;
     }
 
@@ -78,7 +78,7 @@ public class Menu implements Parcelable {
         this.bebidas = bebidas;
     }
 
-    public void setPrecio(int precio) {
+    public void setPrecio(Double precio) {
         this.precio = precio;
     }
 
@@ -93,6 +93,6 @@ public class Menu implements Parcelable {
         dest.writeTypedList(primeros);
         dest.writeTypedList(segundos);
         dest.writeTypedList(bebidas);
-        dest.writeInt(precio);
+        dest.writeDouble(precio);
     }
 }

@@ -47,7 +47,7 @@ public class PlatosAdapter extends RecyclerView.Adapter<PlatosAdapter.PlatoViewH
                     // Puedes obtener la posición del elemento con getAdapterPosition()
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        // Haz algo con la posición del elemento, por ejemplo, invocar un método en tu adaptador
+                        listener.onItemClick(position);
                     }
                 }
             });

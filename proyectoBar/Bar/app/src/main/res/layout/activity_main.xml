@@ -9,11 +9,13 @@
 
     <FrameLayout
         android:id="@+id/fragment_container"
-        android:layout_width="412dp"
-        android:layout_height="658dp"
+        android:layout_width="406dp"
+        android:layout_height="577dp"
+        android:layout_marginTop="76dp"
         android:background="@color/fondo"
-        app:layout_constraintBottom_toTopOf="@+id/menu"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/menu"
@@ -23,7 +25,20 @@
         app:itemActiveIndicatorStyle="@color/black"
         app:itemIconTint="@color/bottom_nav_colors"
         app:itemTextColor="@color/bottom_nav_colors"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragment_container"
         app:menu="@menu/bottom_navigation_menu" />
+
+    <TextView
+        android:id="@+id/nombreMesa"
+        android:layout_width="135dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:text="TextView"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

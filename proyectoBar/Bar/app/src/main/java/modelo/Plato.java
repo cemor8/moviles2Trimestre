@@ -7,16 +7,16 @@ import androidx.annotation.NonNull;
 
 public class Plato implements Parcelable {
     private String nombre;
-    private Integer precio;
+    private Double precio;
 
-    public Plato(String nombre, Integer precio) {
+    public Plato(String nombre, Double precio) {
         this.nombre = nombre;
         this.precio = precio;
     }
 
     protected Plato(Parcel in) {
         nombre = in.readString();
-        precio = in.readInt();
+        precio = in.readDouble();
     }
 
     public static final Creator<Plato> CREATOR = new Creator<Plato>() {
@@ -35,7 +35,7 @@ public class Plato implements Parcelable {
         return nombre;
     }
 
-    public Integer getPrecio() {
+    public Double getPrecio() {
         return precio;
     }
 
@@ -43,7 +43,7 @@ public class Plato implements Parcelable {
         this.nombre = nombre;
     }
 
-    public void setPrecio(Integer precio) {
+    public void setPrecio(Double precio) {
         this.precio = precio;
     }
 
@@ -55,6 +55,6 @@ public class Plato implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(nombre);
-        dest.writeInt(precio);
+        dest.writeDouble(precio);
     }
 }

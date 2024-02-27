@@ -20,10 +20,12 @@ public class Margen extends RecyclerView.ItemDecoration {
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         if (this.horizontal){
-            outRect.left = espacio;
+            outRect.right = espacio / 2;
+            outRect.left = espacio / 2;
         }else{
-            outRect.left = espacio;
-            outRect.top = espacio * 3;
+            outRect.left = espacio / 2;
+            outRect.right = espacio / 2;
+            outRect.top = espacio * 2;
         }
 
     }

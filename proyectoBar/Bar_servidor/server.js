@@ -171,17 +171,16 @@ app.post('/api/facturas', async (req, res) => {
     }
 });
 
-app.post('api/pedidos', async (req, res) => {
+app.post('/api/pedidos', async (req, res) => {
     try {
-        const nextId = await incrementCounter('pedido_id');
-        const nuevoPedido = new Pedido({
+        const nextId = await incrementCounter('contadores');
+        const nuevoPedido = new pedido({
             id: nextId, 
             nombre_mesa : "",
             consumiciones: [],
             precio : 0,
             estador : "creado",
         });
-
         await nuevoPedido.save();
         res.json(nuevoPedido);
     } catch (error) {
@@ -199,12 +198,11 @@ app.post('api/pedidos', async (req, res) => {
 
 const incrementCounter = async (collectionName) => {
     const numero = await contador.findOneAndUpdate(
-      { _id: collectionName },
       { $inc: { valor: 1 } },
       { new: true, upsert: true }
     );
-    return numero.seq;
-  };
+    return numero.valor;
+};
 
 app.listen(port, () => {
     console.log("Servidor levantado correctamente en el puerto", port);

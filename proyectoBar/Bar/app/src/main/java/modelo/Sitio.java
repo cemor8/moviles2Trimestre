@@ -58,4 +58,12 @@ public class Sitio implements Parcelable {
         dest.writeString(nombre);
         dest.writeByte((byte) (ocupado == null ? 0 : ocupado ? 1 : 2));
     }
+
+    @Override
+    public String toString() {
+        return "Sitio{" +
+                "nombre='" + nombre + '\'' +
+                ", ocupado=" + ocupado +
+                '}';
+    }
 }

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Pedido implements Parcelable {
     private String nombreMesa;
     private Integer precio;
-    private ArrayList<Consumicion> consumiciones;
+    private ArrayList<Consumicion> consumiciones = new ArrayList<>();
     private String estado;
     private int id;
 

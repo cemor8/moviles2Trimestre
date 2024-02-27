@@ -78,7 +78,7 @@ public class ConsumicionAdapter extends RecyclerView.Adapter<ConsumicionAdapter.
     public void onBindViewHolder(ConsumicionAdapter.ConsumicionViewHolder holder, int position) {
         Consumicion consumicion = listaConsumiciones.get(position);
         holder.tvNombreConsumicion.setText(consumicion.getNombre());
-        holder.tvPrecioConsumicion.setText(consumicion.getPrecio());
+        holder.tvPrecioConsumicion.setText(String.valueOf(consumicion.getPrecio()));
 
     }
 

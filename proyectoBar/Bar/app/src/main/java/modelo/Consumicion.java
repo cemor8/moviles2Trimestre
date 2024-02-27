@@ -7,10 +7,10 @@ import androidx.annotation.NonNull;
 
 public class Consumicion implements Parcelable {
     private String nombre;
-    private Integer precio;
+    private Double precio;
     private Integer cantidad;
 
-    public Consumicion(String nombre, Integer precio, Integer cantidad) {
+    public Consumicion(String nombre, Double precio, Integer cantidad) {
         this.nombre = nombre;
         this.precio = precio;
         this.cantidad = cantidad;
@@ -21,7 +21,7 @@ public class Consumicion implements Parcelable {
         if (in.readByte() == 0) {
             precio = null;
         } else {
-            precio = in.readInt();
+            precio = in.readDouble();
         }
         if (in.readByte() == 0) {
             cantidad = null;
@@ -46,7 +46,7 @@ public class Consumicion implements Parcelable {
         this.nombre = nombre;
     }
 
-    public void setPrecio(Integer precio) {
+    public void setPrecio(Double precio) {
         this.precio = precio;
     }
 
@@ -58,7 +58,7 @@ public class Consumicion implements Parcelable {
         return nombre;
     }
 
-    public Integer getPrecio() {
+    public Double getPrecio() {
         return precio;
     }
 
@@ -78,7 +78,7 @@ public class Consumicion implements Parcelable {
             dest.writeByte((byte) 0);
         } else {
             dest.writeByte((byte) 1);
-            dest.writeInt(precio);
+            dest.writeDouble(precio);
         }
         if (cantidad == null) {
             dest.writeByte((byte) 0);

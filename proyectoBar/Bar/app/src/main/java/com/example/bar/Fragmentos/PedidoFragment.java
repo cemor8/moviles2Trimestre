@@ -58,10 +58,9 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
     public void inicializar(View view){
 
         RecyclerView recyclerView = view.findViewById(R.id.contenedorPrimeros);
-
-
-
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        System.out.println("aqui");
+        System.out.println(data.getPedido().getConsumiciones());
         ConsumicionAdapter adapter = new ConsumicionAdapter(data.getPedido().getConsumiciones());
         adapter.setOnItemClickListener(this::onItemClickConsumicion);
         recyclerView.setAdapter(adapter);

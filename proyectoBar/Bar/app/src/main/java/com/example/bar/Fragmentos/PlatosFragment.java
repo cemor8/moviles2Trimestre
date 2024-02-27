@@ -18,6 +18,7 @@ import com.example.bar.adaptadores.PlatosAdapter;
 import java.util.ArrayList;
 
 import modelo.ConexionRetrofit;
+import modelo.Consumicion;
 import modelo.Data;
 import modelo.Plato;
 import retrofit2.Call;
@@ -63,20 +64,10 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
 
                     ArrayList<Plato> items = (ArrayList<Plato>) response.body();
                     data.getListaPlatosRestaurante().addAll(items);
-//                    se rellena el recyclerview con un gridlayout con 2 columnas, se establecee el adaptador de los platos y se indica la lista
-//                    a recorrer, la lista de data.getListaPlatosRestaurante(), tambien crea un espacio que es un estilo para margenes en cada elemento del
-//                    gridlayout
-                    RecyclerView recyclerView = view.findViewById(R.id.contenedorListaPlatos);
-                    int columnas = 2;
-                    recyclerView.setLayoutManager(new GridLayoutManager(getContext(), columnas));
-                    PlatosAdapter adapter = new PlatosAdapter(data.getListaPlatosRestaurante());
-                    recyclerView.setAdapter(adapter);
-                    int espacio = (int) TypedValue.applyDimension(
-                            TypedValue.COMPLEX_UNIT_DIP,
-                            16,
-                            getResources().getDisplayMetrics()
-                    );
-                    recyclerView.addItemDecoration(new Margen(espacio,false));
+
+
+                    recorrer(view);
+
 
 
                 }else {
@@ -94,11 +85,31 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
             }
         });
     }
+//                    se rellena el recyclerview con un gridlayout con 2 columnas, se establecee el adaptador de los platos y se indica la lista
+//                    a recorrer, la lista de data.getListaPlatosRestaurante(), tambien crea un espacio que es un estilo para margenes en cada elemento del
+//                    gridlayout
+    public void recorrer(View view){
+        RecyclerView recyclerView = view.findViewById(R.id.contenedorListaPlatos);
+        int columnas = 2;
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), columnas));
+        PlatosAdapter adapter = new PlatosAdapter(data.getListaPlatosRestaurante());
+        adapter.setOnItemClickListener(this::onItemClick);
+        recyclerView.setAdapter(adapter);
+        int espacio = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                16,
+                getResources().getDisplayMetrics()
+        );
+        recyclerView.addItemDecoration(new Margen(espacio,false));
+    }
 
     @Override
     public void onItemClick(int position) {
-        if (this.data.getPedido() == null){
 
-        }
+        Plato plato = this.data.getListaPlatosRestaurante().get(position);
+        Consumicion consumicion = new Consumicion(plato.getNombre(), plato.getPrecio(),1);
+        this.data.getPedido().getConsumiciones().add(consumicion);
+
+
     }
 }

@@ -8,14 +8,14 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 
 public class Mesa implements Parcelable {
-    private String nombre;
+    private String nombre_mesa;
     private Boolean ocupada;
     private String ubicacion;
     private Integer capacidad;
     private ArrayList<Sitio> sitios;
 
     public Mesa(String nombre, Boolean ocupada, String ubicacion, Integer capacidad, ArrayList<Sitio> sitios) {
-        this.nombre = nombre;
+        this.nombre_mesa = nombre;
         this.ocupada = ocupada;
         this.ubicacion = ubicacion;
         this.capacidad = capacidad;
@@ -23,7 +23,7 @@ public class Mesa implements Parcelable {
     }
 
     protected Mesa(Parcel in) {
-        nombre = in.readString();
+        nombre_mesa = in.readString();
         byte tmpOcupada = in.readByte();
         ocupada = tmpOcupada == 0 ? null : tmpOcupada == 1;
         ubicacion = in.readString();
@@ -48,7 +48,7 @@ public class Mesa implements Parcelable {
     };
 
     public String getNombre() {
-        return nombre;
+        return nombre_mesa;
     }
 
     public Boolean getOcupada() {
@@ -68,7 +68,7 @@ public class Mesa implements Parcelable {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre_mesa = nombre;
     }
 
     public void setOcupada(Boolean ocupada) {
@@ -94,7 +94,7 @@ public class Mesa implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeString(nombre);
+        dest.writeString(nombre_mesa);
         dest.writeByte((byte) (ocupada == null ? 0 : ocupada ? 1 : 2));
         dest.writeString(ubicacion);
         if (capacidad == null) {
@@ -104,5 +104,16 @@ public class Mesa implements Parcelable {
             dest.writeInt(capacidad);
         }
         dest.writeTypedList(sitios);
+    }
+
+    @Override
+    public String toString() {
+        return "Mesa{" +
+                "nombre='" + nombre_mesa + '\'' +
+                ", ocupada=" + ocupada +
+                ", ubicacion='" + ubicacion + '\'' +
+                ", capacidad=" + capacidad +
+                ", sitios=" + sitios +
+                '}';
     }
 }

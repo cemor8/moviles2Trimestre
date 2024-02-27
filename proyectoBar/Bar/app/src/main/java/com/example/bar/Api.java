@@ -32,7 +32,7 @@ public interface Api {
     @PUT("/api/mesa/{nombre_mesa}")
     Call<ResponseBody> modificarMesa();
     @POST("/api/pedidos")
-    Call<ResponseBody> crearPedido();
+    Call<Pedido> crearPedido();
     @POST("/api/facturas")
     Call<ResponseBody> crearFactura();
 

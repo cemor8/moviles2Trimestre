@@ -20,6 +20,8 @@ import modelo.ConexionRetrofit;
 import modelo.Data;
 import modelo.Menu;
 import modelo.Mesa;
+import modelo.Pedido;
+import modelo.Sitio;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,8 +42,7 @@ public class ControllerLogin extends AppCompatActivity {
      * @param view
      */
     public void login(View view){
-        cambiarActivity();
-        /*
+
         Api api = ConexionRetrofit.getConexion().create(Api.class);
         Call<ArrayList<Mesa>> call = api.getMesas();
         call.enqueue(new Callback<ArrayList<Mesa>>() {
@@ -50,18 +51,35 @@ public class ControllerLogin extends AppCompatActivity {
 
                 if (response.isSuccessful()) {
 
-                    System.out.println(response.body());
+
                     data.getListaPlatosRestaurante().removeAll(data.getListaPlatosRestaurante());
                     ArrayList<Mesa> items = (ArrayList<Mesa>) response.body();
-                    Optional<Mesa> mesaSeleccionada = items.stream().filter(mesa -> mesa.getOcupada()
-                            && (mesa.getNombre().equalsIgnoreCase(String.valueOf(textView.getText())) || mesa.getSitios().stream().anyMatch(sitio -> sitio.getNombre().equalsIgnoreCase(String.valueOf(textView.getText()))))).findAny();
+                    System.out.println(items);
+                    String nombreMesa = String.valueOf(textView.getText());
+                    Optional<Mesa> mesaSeleccionada = items.stream().filter(mesa -> !mesa.getOcupada()
+                            && (mesa.getNombre().equalsIgnoreCase(nombreMesa) || mesa.getSitios().stream().anyMatch(sitio -> sitio.getNombre().equalsIgnoreCase(nombreMesa)))).findAny();
+
                     if (!mesaSeleccionada.isPresent()){
                         System.out.println("Mesa no encontrada");
                         return;
                     }
-                    data.setMesaSeleccionada(mesaSeleccionada.get());
-                    System.out.println(mesaSeleccionada);
-                    cambiarActivity();
+                    if (mesaSeleccionada.get().getUbicacion().equalsIgnoreCase("barra")){
+                        Optional<Sitio> sitioOptional = mesaSeleccionada.get().getSitios().stream().filter(sitio1 -> sitio1.getNombre().equalsIgnoreCase(String.valueOf(textView.getText()))).findAny();
+                        Sitio sitio = null;
+                        if (sitioOptional.isPresent()){
+                            sitio = sitioOptional.get();
+                        }
+                        mesaSeleccionada.get().getSitios().removeAll(mesaSeleccionada.get().getSitios());
+                        mesaSeleccionada.get().getSitios().add(sitio);
+                        data.setMesaSeleccionada(mesaSeleccionada.get());
+
+                    }else{
+                        data.setMesaSeleccionada(mesaSeleccionada.get());
+                    }
+
+                    System.out.println("creando");
+                    crearPedido();
+
 
 
 
@@ -81,12 +99,51 @@ public class ControllerLogin extends AppCompatActivity {
             }
         });
 
-         */
+
 
     }
     public void cambiarActivity(){
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("data",this.data);
         startActivity(intent);
+    }
+    public void crearPedido(){
+
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+        Call<Pedido> call = api.crearPedido();
+        call.enqueue(new Callback<Pedido>() {
+            @Override
+            public void onResponse(Call<Pedido> call, Response<Pedido> response) {
+
+                if (response.isSuccessful()) {
+
+                    System.out.println(response.body());
+                    data.getListaPlatosRestaurante().removeAll(data.getListaPlatosRestaurante());
+                    Pedido pedido = (Pedido) response.body();
+                    data.setPedido(pedido);
+                    if(data.getMesaSeleccionada().getSitios().isEmpty()){
+                        data.getPedido().setNombreMesa(data.getMesaSeleccionada().getNombre());
+                    }else{
+                        data.getPedido().setNombreMesa(data.getMesaSeleccionada().getSitios().get(0).getNombre());
+                    }
+                    cambiarActivity();
+
+                }else {
+                    int statusCode = response.code();
+                    System.out.println(statusCode);
+                    System.out.println("respuesta mal");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Pedido> call, Throwable t) {
+                System.out.println("error");
+                System.out.println(t.getMessage());
+            }
+        });
+
+
+
     }
 }
