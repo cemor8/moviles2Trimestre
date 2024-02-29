@@ -33,6 +33,7 @@ public class ConsumicionAdapter extends RecyclerView.Adapter<ConsumicionAdapter.
         public TextView tvNombreConsumicion;
         public ImageView imgConsumicion;
         public TextView tvPrecioConsumicion;
+        public TextView cantidadConsumicion;
         public Button btn;
 
 
@@ -42,6 +43,7 @@ public class ConsumicionAdapter extends RecyclerView.Adapter<ConsumicionAdapter.
             tvNombreConsumicion = itemView.findViewById(R.id.nombreConsumicion);
             imgConsumicion = itemView.findViewById(R.id.imagenConsumicion);
             tvPrecioConsumicion = itemView.findViewById(R.id.precioConsumicion);
+            cantidadConsumicion = itemView.findViewById(R.id.cantidadConsumicion);
             btn = itemView.findViewById(R.id.btnEliminarConsumicion);
 
 
@@ -79,6 +81,8 @@ public class ConsumicionAdapter extends RecyclerView.Adapter<ConsumicionAdapter.
         Consumicion consumicion = listaConsumiciones.get(position);
         holder.tvNombreConsumicion.setText(consumicion.getNombre());
         holder.tvPrecioConsumicion.setText(String.valueOf(consumicion.getPrecio()));
+        String cantidad = consumicion.getCantidad()+" unidades";
+        holder.cantidadConsumicion.setText(cantidad);
 
     }
 

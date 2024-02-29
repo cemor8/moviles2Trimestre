@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="180dp"
     android:layout_height="wrap_content"
     android:background="@drawable/cadaplato"
@@ -33,11 +35,57 @@
         android:text="Precio del Plato"
         android:textColor="@color/white" />
 
-    <Button
-        android:id="@+id/btnMeterPlato"
-        android:layout_width="110dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/acento"
-        android:text="Añadir" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="171dp"
+        android:layout_height="120dp">
+
+        <ImageButton
+            android:id="@+id/quitar"
+            android:layout_width="33dp"
+            android:layout_height="33dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/btncantidad"
+            android:scaleType="fitCenter"
+            android:src="@drawable/subtract"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/cantidad"
+            android:layout_width="39dp"
+            android:layout_height="17dp"
+            android:layout_marginTop="22dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="1"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toStartOf="@+id/meter"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btnMeterPlato"
+            android:layout_width="110dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="28dp"
+            android:layout_marginBottom="4dp"
+            android:backgroundTint="@color/acento"
+            android:text="Añadir"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageButton
+            android:id="@+id/meter"
+            android:layout_width="33dp"
+            android:layout_height="33dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="17dp"
+            android:background="@drawable/btncantidad"
+            android:scaleType="fitCenter"
+            android:src="@drawable/plus_math"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </LinearLayout>

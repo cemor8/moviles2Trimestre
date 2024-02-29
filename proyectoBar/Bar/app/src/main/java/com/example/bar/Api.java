@@ -7,10 +7,10 @@ import modelo.Menu;
 import modelo.Mesa;
 import modelo.Pedido;
 import modelo.Plato;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -35,5 +35,9 @@ public interface Api {
     Call<Pedido> crearPedido();
     @POST("/api/facturas")
     Call<ResponseBody> crearFactura();
+    @PUT("/api/restarPlatos/{nombre}")
+    Call<ResponseBody> restarPlatos(@Path("nombre") String nombrePlato, @Body RequestBody cantidad);
+    @PUT("/api/restarBebida/{nombre}")
+    Call<ResponseBody> restarBebida(@Path("nombre") String nombreBebida, @Body RequestBody cantidad);
 
 }

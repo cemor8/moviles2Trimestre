@@ -6,15 +6,18 @@ import android.os.Parcelable;
 public class Bebida implements Parcelable {
     private String nombre;
     private Double precio;
+    private Integer cantidad;
 
-    public Bebida(String nombre, Double precio) {
+    public Bebida(String nombre, Double precio, Integer cantidad) {
         this.nombre = nombre;
         this.precio = precio;
+        this.cantidad = cantidad;
     }
 
     protected Bebida(Parcel in) {
         this.nombre = in.readString();
         this.precio = in.readDouble();
+        this.cantidad = in.readInt();
     }
 
     public static final Creator<Bebida> CREATOR = new Creator<Bebida>() {
@@ -34,10 +37,19 @@ public class Bebida implements Parcelable {
         return 0;
     }
 
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(nombre);
         dest.writeDouble(precio);
+        dest.writeInt(cantidad);
     }
 
     public String getNombre() {

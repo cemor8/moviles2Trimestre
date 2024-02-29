@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,12 +33,18 @@ public class ListaBebidasAdapter extends RecyclerView.Adapter<ListaBebidasAdapte
         public TextView tvPrecioBebida;
         public ImageView imgBebida;
         public Button btn;
+        public ImageButton añadir;
+        public ImageButton restar;
+        public TextView tvCantidad;
 
         public ListaBebidasViewHolder(View itemView) {
             super(itemView);
             tvNombreBebida = itemView.findViewById(R.id.nombreBebida);
             tvPrecioBebida = itemView.findViewById(R.id.precioBebida);
             imgBebida = itemView.findViewById(R.id.imagenBebida);
+            añadir = itemView.findViewById(R.id.meter);
+            restar = itemView.findViewById(R.id.quitar);
+            tvCantidad = itemView.findViewById(R.id.cantidad);
             btn = itemView.findViewById(R.id.btnMeterBebida);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -47,7 +54,31 @@ public class ListaBebidasAdapter extends RecyclerView.Adapter<ListaBebidasAdapte
                     // Puedes obtener la posición del elemento con getAdapterPosition()
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        // Haz algo con la posición del elemento, por ejemplo, invocar un método en tu adaptador
+                        listener.onItemClick(position,tvCantidad);
+                    }
+                }
+            });
+            restar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    System.out.println("clcike un boton");
+                    // Maneja el clic aquí
+                    // Puedes obtener la posición del elemento con getAdapterPosition()
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        listener.restar(tvCantidad,position);
+                    }
+                }
+            });
+            añadir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    System.out.println("clcike un boton");
+                    // Maneja el clic aquí
+                    // Puedes obtener la posición del elemento con getAdapterPosition()
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        listener.sumar(tvCantidad,position);
                     }
                 }
             });
@@ -77,6 +108,8 @@ public class ListaBebidasAdapter extends RecyclerView.Adapter<ListaBebidasAdapte
         return listaBebidas.size();
     }
     public interface OnItemClickListener {
-        void onItemClick(int position);
+        void onItemClick(int position,TextView textView);
+        void sumar(TextView textView,int position);
+        void restar(TextView textView,int position);
     }
 }

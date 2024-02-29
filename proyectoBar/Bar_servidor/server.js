@@ -18,72 +18,81 @@ mongoose.connection.on('error', (err) => {
 });
 const Schema = mongoose.Schema;
 const modelo = mongoose.model;
-const esquemaSitio= new Schema({
+const esquemaSitio = new Schema({
     nombre: String,
     ocupada: Boolean
-},{
+}, {
     versionKey: false
 });
 const esquemaMesa = new Schema({
     nombre_mesa: String,
     ocupada: Boolean,
     ubicacion: String,
-    sitios : [esquemaSitio]
-},{
+    sitios: [esquemaSitio]
+}, {
     versionKey: false
 });
 
-const esquemaBebida= new Schema({
+const esquemaBebida = new Schema({
     nombre: String,
-    precio: Number
-},{
+    precio: Number,
+    cantidad: Number
+}, {
     versionKey: false
 });
-const esquemaPlato= new Schema({
+const esquemaPlato = new Schema({
     nombre: String,
-    precio: Number
-},{
+    precio: Number,
+    cantidad: Number
+}, {
     versionKey: false
 });
-const esquemaMenusDia= new Schema({
+const esquemaMenusDia = new Schema({
     dia: String,
-    primeros : Array,
-    segundos : Array,
-    bebidas : Array,
+    primeros: [esquemaPlato],
+    segundos: [esquemaPlato],
+    bebidas: [esquemaBebida],
     precio: Number
-},{
+}, {
     versionKey: false
 });
-const esquemaPedidos= new Schema({
-    id : Number,
+const esquemaPedidos = new Schema({
+    id: Number,
     nombre_mesa: String,
-    consumiciones : Array,
-    estado : String,
+    consumiciones: Array,
+    estado: String,
     precio: Number
-},{
+}, {
     versionKey: false
 });
 
-const esquemaFactura= new Schema({
-    id : Number,
+const esquemaFactura = new Schema({
+    id: Number,
     nombre_mesa: String,
-    consumiciones : Array,
-    estado : String,
+    consumiciones: Array,
+    estado: String,
     precio: Number
-},{
+}, {
     versionKey: false
 });
 const contador = mongoose.model('contadores', new mongoose.Schema({
-    _id: {type: String, required: true},
+    _id: { type: String, required: true },
     valor: { type: Number, default: 0 }
 }));
 
+const esquemaReserva = new Schema({
+    dni: String,
+    mesas: [esquemaMesa]
+})
+
+
 const mesa = modelo('mesas', esquemaMesa);
-const bebida = modelo("bebidas",esquemaBebida)
-const plato = modelo("platos",esquemaPlato)
-const menusDia = modelo("menusdias",esquemaMenusDia)
-const pedido = modelo("pedidos",esquemaPedidos)
-const factura = modelo("facturas",esquemaFactura)
+const bebida = modelo("bebidas", esquemaBebida)
+const plato = modelo("platos", esquemaPlato)
+const menusDia = modelo("menusdias", esquemaMenusDia)
+const pedido = modelo("pedidos", esquemaPedidos)
+const factura = modelo("facturas", esquemaFactura)
+const reserva = modelo("reservas", esquemaReserva)
 
 
 //#region get
@@ -155,6 +164,76 @@ app.put('/api/mesa:nombre_mesa', async (req, res) => {
     }
 });
 
+app.put('/api/restarPlatos/:nombre', async (req, res) => {
+    let nombre = req.params.nombre
+    let cantidadARestar = req.body.cantidad
+    console.log(nombre)
+    console.log(cantidadARestar)
+    try {
+        await menusDia.find({ $or: [{ "primeros.nombre": nombre }, { "segundos.nombre": nombre }] })
+            .then(docs => {
+                docs.forEach(doc => {
+                    doc.primeros.forEach(plato => {
+                        if (plato.nombre === nombre) {
+                            plato.cantidad -= cantidadARestar;
+                        }
+                    });
+                    doc.segundos.forEach(plato => {
+                        if (plato.nombre === nombre) {
+                            plato.cantidad -= cantidadARestar;
+                        }
+                    });
+                    doc.save();
+                });
+            })
+
+        await plato.find({ "nombre": nombre })
+            .then(docs => {
+                docs.forEach(doc => {
+
+                    doc.cantidad -= cantidadARestar;
+                    doc.save();
+                });
+            });
+        res.status(200).json({ message: "Cantidad actualizada correctamente" });
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({ message: "Error al actualizar la cantidad del plato", error: error });
+    }
+});
+
+
+app.put('/api/restarBebida/:nombre', async (req, res) => {
+    let nombre = req.params.nombre
+    let cantidadARestar = req.body.cantidad
+    console.log(nombre)
+    console.log(cantidadARestar)
+    try {
+        await menusDia.find({ "bebidas.nombre" : nombre})
+            .then(docs => {
+                docs.forEach(doc => {
+                    doc.bebidas.forEach(bebida => {
+                        if (bebida.nombre === nombre) {
+                            bebida.cantidad -= cantidadARestar;
+                        }
+                    });
+                    doc.save();
+                });
+            })
+
+        await bebida.find({ "nombre": nombre })
+            .then(docs => {
+                docs.forEach(doc => {
+                    doc.cantidad -= cantidadARestar;
+                    doc.save();
+                });
+            });
+        res.status(200).json({ message: "Cantidad actualizada correctamente" });
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({ message: "Error al actualizar la cantidad de la bebida", error: error });
+    }
+});
 
 
 //#endregion put
@@ -175,11 +254,11 @@ app.post('/api/pedidos', async (req, res) => {
     try {
         const nextId = await incrementCounter('contadores');
         const nuevoPedido = new pedido({
-            id: nextId, 
-            nombre_mesa : "",
+            id: nextId,
+            nombre_mesa: "",
             consumiciones: [],
-            precio : 0,
-            estador : "creado",
+            precio: 0,
+            estador: "creado",
         });
         await nuevoPedido.save();
         res.json(nuevoPedido);
@@ -191,15 +270,27 @@ app.post('/api/pedidos', async (req, res) => {
 
 
 
+
 //#endregion post
 
 //#region delete
+
+app.delete('/api/reservas/:dni', async (req, res) => {
+    try {
+        await reserva.findOneAndDelete({ dni: req.params.dni });
+        console.log("bien");
+        res.sendStatus(200);
+    } catch (err) {
+        console.log(err.message)
+        res.status(500).json({ message: err.message });
+    }
+});
+
 //#endregion delete
 
-const incrementCounter = async (collectionName) => {
+const incrementCounter = async () => {
     const numero = await contador.findOneAndUpdate(
-      { $inc: { valor: 1 } },
-      { new: true, upsert: true }
+        { $inc: { valor: 1 } }
     );
     return numero.valor;
 };
