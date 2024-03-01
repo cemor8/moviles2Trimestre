@@ -22,6 +22,7 @@ import modelo.Menu;
 import modelo.Mesa;
 import modelo.Pedido;
 import modelo.Sitio;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -77,8 +78,9 @@ public class ControllerLogin extends AppCompatActivity {
                         data.setMesaSeleccionada(mesaSeleccionada.get());
                     }
 
-                    System.out.println("creando");
-                    crearPedido();
+                    System.out.println("ocupando reserva");
+                    ocuparReserva();
+
 
 
 
@@ -102,11 +104,19 @@ public class ControllerLogin extends AppCompatActivity {
 
 
     }
+
+    /**
+     * Método que cambia a la activity principal
+     */
     public void cambiarActivity(){
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("data",this.data);
         startActivity(intent);
     }
+
+    /**
+     * Método que crea un pedido para la mesa
+     */
     public void crearPedido(){
 
         Api api = ConexionRetrofit.getConexion().create(Api.class);
@@ -126,6 +136,8 @@ public class ControllerLogin extends AppCompatActivity {
                     }else{
                         data.getPedido().setNombreMesa(data.getMesaSeleccionada().getSitios().get(0).getNombre());
                     }
+
+
                     cambiarActivity();
 
                 }else {
@@ -143,7 +155,35 @@ public class ControllerLogin extends AppCompatActivity {
             }
         });
 
+    }
 
+    /**
+     * Método que se encarga de ocupar la reserva de esa mesa
+     */
+    public void ocuparReserva(){
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+        Call<ResponseBody> call = api.ocuparReserva(String.valueOf(this.textView.getText()));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
+                if (response.isSuccessful()) {
+                    System.out.println("Reserva atendida");
+                    crearPedido();
+
+                }else {
+                    int statusCode = response.code();
+                    System.out.println(statusCode);
+                    System.out.println("respuesta mal");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                System.out.println("error");
+                System.out.println(t.getMessage());
+            }
+        });
     }
 }

@@ -82,7 +82,9 @@ const contador = mongoose.model('contadores', new mongoose.Schema({
 
 const esquemaReserva = new Schema({
     dni: String,
-    mesas: [esquemaMesa]
+    mesas: [esquemaMesa],
+    atendido : String,
+    creada : Date
 })
 
 
@@ -232,6 +234,24 @@ app.put('/api/restarBebida/:nombre', async (req, res) => {
     } catch (error) {
         console.log(error.message)
         res.status(500).json({ message: "Error al actualizar la cantidad de la bebida", error: error });
+    }
+});
+
+app.put('/api/ocuparReserva/:nombreMesa', async (req, res) => {
+    let nombreMesa = req.params.nombreMesa
+    
+    try {
+            await reserva.findOneAndUpdate(
+                { $or: [
+                    { "mesas.nombre_mesa": nombreMesa },
+                    { "mesas.sitios.nombre": nombreMesa }
+                ]},
+                { $set: { atendido: true } }
+        );
+        res.status(200).json({ message: "Reserva actualizada correctamente" });
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({ message: "Error al actualizar la reserva", error: error });
     }
 });
 

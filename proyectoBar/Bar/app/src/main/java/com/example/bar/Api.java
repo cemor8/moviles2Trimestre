@@ -39,5 +39,7 @@ public interface Api {
     Call<ResponseBody> restarPlatos(@Path("nombre") String nombrePlato, @Body RequestBody cantidad);
     @PUT("/api/restarBebida/{nombre}")
     Call<ResponseBody> restarBebida(@Path("nombre") String nombreBebida, @Body RequestBody cantidad);
+    @PUT("/api/ocuparReserva/{nombreMesa}")
+    Call<ResponseBody> ocuparReserva(@Path("nombreMesa") String nombreMesa);
 
 }
