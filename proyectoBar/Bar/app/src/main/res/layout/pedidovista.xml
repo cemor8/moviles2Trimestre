@@ -8,45 +8,51 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="67dp"
+        android:layout_width="375dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="56dp"
         android:text="Pedido"
         android:textColor="@color/white"
         android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/nombreMenuDia2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="63dp"
+        android:layout_marginStart="27dp"
+        android:layout_marginTop="48dp"
         android:layout_marginEnd="256dp"
         android:text="Consumiciones"
         android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/contenedorPrimeros"
         android:layout_width="380dp"
-        android:layout_height="250dp"
+        android:layout_height="270dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="34dp"
         android:layout_marginEnd="15dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nombreMenuDia2" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btnConfirmar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="160dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="124dp"
         android:backgroundTint="@color/acento"
-        android:text="Button"
+        android:text="Confirmar Pedido"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/contenedorPrimeros" />
 </androidx.constraintlayout.widget.ConstraintLayout>

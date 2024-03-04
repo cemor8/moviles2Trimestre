@@ -67,17 +67,7 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
                     data.getListaBebidasRestaurante().removeAll(data.getListaBebidasRestaurante());
                     ArrayList<Bebida> items = (ArrayList<Bebida>) response.body();
                     data.getListaBebidasRestaurante().addAll(items);
-                    RecyclerView recyclerView = view.findViewById(R.id.contenedorListaBebidas);
-                    int columnas = 2;
-                    recyclerView.setLayoutManager(new GridLayoutManager(getContext(), columnas));
-                    ListaBebidasAdapter adapter = new ListaBebidasAdapter(data.getListaBebidasRestaurante());
-                    recyclerView.setAdapter(adapter);
-                    int espacio = (int) TypedValue.applyDimension(
-                            TypedValue.COMPLEX_UNIT_DIP,
-                            16,
-                            getResources().getDisplayMetrics()
-                    );
-                    recyclerView.addItemDecoration(new Margen(espacio,false));
+                    recorerr(view);
 
 
 
@@ -95,6 +85,20 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
                 System.out.println(t.getMessage());
             }
         });
+    }
+    public void recorerr(View view){
+        RecyclerView recyclerView = view.findViewById(R.id.contenedorListaBebidas);
+        int columnas = 2;
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), columnas));
+        ListaBebidasAdapter adapter = new ListaBebidasAdapter(data.getListaBebidasRestaurante());
+        recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(this);
+        int espacio = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                16,
+                getResources().getDisplayMetrics()
+        );
+        recyclerView.addItemDecoration(new Margen(espacio,false));
     }
 
     @Override

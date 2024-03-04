@@ -102,7 +102,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
-                android:id="@+id/btnMeterPlato"
+                android:id="@+id/btnMeterMenu"
                 android:layout_width="110dp"
                 android:layout_height="50dp"
                 android:layout_marginEnd="28dp"

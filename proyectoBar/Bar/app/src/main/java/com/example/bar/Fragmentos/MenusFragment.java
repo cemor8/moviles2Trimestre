@@ -5,6 +5,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -26,25 +27,33 @@ import java.util.Optional;
 
 import modelo.Bebida;
 import modelo.ConexionRetrofit;
+import modelo.Consumicion;
 import modelo.Data;
 import modelo.Menu;
+import modelo.MenuMeter;
+import modelo.Pedido;
 import modelo.Plato;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemClickListener, SegundosAdapter.OnItemClickListener, BebidasAdapter.OnItemClickListener{
     private Data data;
+    private Button btn;
+    private Integer cantidad;
     public MenusFragment(){
 
     }
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.menusdia, container, false);
-
+        btn = view.findViewById(R.id.btnMeterMenu);
+        btn.setOnClickListener(this::meterMenu);
         if(getArguments() != null){
             this.data = getArguments().getParcelable("data");
             System.out.println("comunicacion correcta");
+            this.recibirPedido(view);
             this.inicializar(view);
         }
         return view;
@@ -155,5 +164,73 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
         this.data.getConstruirMenu().setBebidas(new ArrayList<>());
         this.data.getConstruirMenu().getBebidas().add(bebida);
 
+    }
+
+
+    public void meterMenu(View view){
+        if (this.data.getConstruirMenu().getBebidas().isEmpty() || this.data.getConstruirMenu().getPrimeros().isEmpty() || this.data.getConstruirMenu().getSegundos().isEmpty()){
+            return;
+        }
+        MenuMeter menuMeter = new MenuMeter(data.getConstruirMenu().getDia(),data.getConstruirMenu().getPrimeros(),data.getConstruirMenu().getSegundos(),data.getConstruirMenu().getBebidas(),data.getConstruirMenu().getPrecio());
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+        Call<ResponseBody> call = api.meterMenu(data.getPedido().getId(),menuMeter);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                si la respuesta es satisfactoria se cargan los platos de la base de datos
+                if (response.isSuccessful()) {
+                    System.out.println(response.body());
+                    data.getPedido().getMenus().add(menuMeter);
+                    data.setConstruirMenu(new Menu(data.getMenuDia().getDia(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),data.getMenuDia().getPrecio()));
+                }else {
+                    int statusCode = response.code();
+                    System.out.println(statusCode);
+                    System.out.println("respuesta mal");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                System.out.println("error");
+                System.out.println(t.getMessage());
+            }
+        });
+    }
+    /**
+     * Método que recibe el pedido de la base de datos
+     * @param view
+     */
+    public void recibirPedido(View view){
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+        Call<Pedido> call = api.getpedido(data.getPedido().getId());
+        call.enqueue(new Callback<Pedido>() {
+            @Override
+            public void onResponse(Call<Pedido> call, Response<Pedido> response) {
+//                si la respuesta es satisfactoria se cargan los platos de la base de datos
+                if (response.isSuccessful()) {
+                    System.out.println(response.body());
+
+                    Pedido item = (Pedido) response.body();
+                    if (item!=null){
+                        data.setPedido(item);
+                    }
+
+
+
+                }else {
+                    int statusCode = response.code();
+                    System.out.println(statusCode);
+                    System.out.println("respuesta mal");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Pedido> call, Throwable t) {
+                System.out.println("error");
+                System.out.println(t.getMessage());
+            }
+        });
     }
 }

@@ -8,28 +8,32 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 
 public class Pedido implements Parcelable {
-    private String nombreMesa;
+    private String nombre_mesa;
     private Integer precio;
     private ArrayList<Consumicion> consumiciones = new ArrayList<>();
+    private ArrayList<MenuMeter> menus = new ArrayList<>();
     private String estado;
     private int id;
 
-    public Pedido(String nombreMesa, Integer precio, ArrayList<Consumicion> consumiciones, String estado, int id) {
-        this.nombreMesa = nombreMesa;
+    public Pedido(String nombre_mesa, Integer precio, ArrayList<Consumicion> consumiciones, ArrayList<MenuMeter> menus, String estado, int id) {
+        this.nombre_mesa = nombre_mesa;
         this.precio = precio;
         this.consumiciones = consumiciones;
+        this.menus = menus;
         this.estado = estado;
         this.id = id;
     }
 
     protected Pedido(Parcel in) {
-        nombreMesa = in.readString();
+        nombre_mesa = in.readString();
         if (in.readByte() == 0) {
             precio = null;
         } else {
             precio = in.readInt();
         }
         estado = in.readString();
+        menus = in.createTypedArrayList(MenuMeter.CREATOR);
+        consumiciones = in.createTypedArrayList(Consumicion.CREATOR);
         id = in.readInt();
     }
 
@@ -46,7 +50,7 @@ public class Pedido implements Parcelable {
     };
 
     public String getNombreMesa() {
-        return nombreMesa;
+        return nombre_mesa;
     }
 
     public Integer getPrecio() {
@@ -55,6 +59,22 @@ public class Pedido implements Parcelable {
 
     public ArrayList<Consumicion> getConsumiciones() {
         return consumiciones;
+    }
+
+    public String getNombre_mesa() {
+        return nombre_mesa;
+    }
+
+    public void setNombre_mesa(String nombre_mesa) {
+        this.nombre_mesa = nombre_mesa;
+    }
+
+    public void setMenus(ArrayList<MenuMeter> menus) {
+        this.menus = menus;
+    }
+
+    public ArrayList<MenuMeter> getMenus() {
+        return menus;
     }
 
     public String getEstado() {
@@ -66,7 +86,7 @@ public class Pedido implements Parcelable {
     }
 
     public void setNombreMesa(String nombreMesa) {
-        this.nombreMesa = nombreMesa;
+        this.nombre_mesa = nombreMesa;
     }
 
     public void setPrecio(Integer precio) {
@@ -93,7 +113,7 @@ public class Pedido implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
 
-        dest.writeString(nombreMesa);
+        dest.writeString(nombre_mesa);
         if (precio == null) {
             dest.writeByte((byte) 0);
         } else {
@@ -102,5 +122,7 @@ public class Pedido implements Parcelable {
         }
         dest.writeString(estado);
         dest.writeInt(id);
+        dest.writeTypedList(menus);
+        dest.writeTypedList(consumiciones);
     }
 }

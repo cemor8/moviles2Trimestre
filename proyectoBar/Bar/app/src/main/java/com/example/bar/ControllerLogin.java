@@ -137,8 +137,8 @@ public class ControllerLogin extends AppCompatActivity {
                         data.getPedido().setNombreMesa(data.getMesaSeleccionada().getSitios().get(0).getNombre());
                     }
 
+                    modificarPedido();
 
-                    cambiarActivity();
 
                 }else {
                     int statusCode = response.code();
@@ -170,6 +170,31 @@ public class ControllerLogin extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     System.out.println("Reserva atendida");
                     crearPedido();
+
+                }else {
+                    int statusCode = response.code();
+                    System.out.println(statusCode);
+                    System.out.println("respuesta mal");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                System.out.println("error");
+                System.out.println(t.getMessage());
+            }
+        });
+    }
+    public void modificarPedido(){
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+        Call<ResponseBody> call = api.modificarPedido(data.getPedido().getId(),data.getPedido());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                if (response.isSuccessful()) {
+                    cambiarActivity();
 
                 }else {
                     int statusCode = response.code();

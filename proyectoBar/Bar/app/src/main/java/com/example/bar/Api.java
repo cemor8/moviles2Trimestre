@@ -3,7 +3,9 @@ package com.example.bar;
 import java.util.ArrayList;
 
 import modelo.Bebida;
+import modelo.Consumicion;
 import modelo.Menu;
+import modelo.MenuMeter;
 import modelo.Mesa;
 import modelo.Pedido;
 import modelo.Plato;
@@ -27,8 +29,10 @@ public interface Api {
     Call<ArrayList<Menu>> getMenus();
     @GET("/api/pedidos")
     Call<ArrayList<Pedido>> getpedidos();
+    @GET("/api/pedido/{id}")
+    Call<Pedido> getpedido(@Path("id") int id);
     @PUT("/api/pedido/{id}")
-    Call<ResponseBody> modificarPedido();
+    Call<ResponseBody> modificarPedido(@Path("id") int id, @Body Pedido pedido);
     @PUT("/api/mesa/{nombre_mesa}")
     Call<ResponseBody> modificarMesa();
     @POST("/api/pedidos")
@@ -41,5 +45,9 @@ public interface Api {
     Call<ResponseBody> restarBebida(@Path("nombre") String nombreBebida, @Body RequestBody cantidad);
     @PUT("/api/ocuparReserva/{nombreMesa}")
     Call<ResponseBody> ocuparReserva(@Path("nombreMesa") String nombreMesa);
+    @POST("/api/meterMenu/{id}")
+    Call<ResponseBody> meterMenu(@Path("id") int id,@Body MenuMeter menu);
+    @POST("/api/meterConsumicion/{id}")
+    Call<ResponseBody> meterConsumicion(@Path("id") int id,@Body Consumicion consumicion);
 
 }

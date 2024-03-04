@@ -5,6 +5,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 
 import modelo.ConexionRetrofit;
 import modelo.Data;
+import modelo.Pedido;
 import modelo.Plato;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,6 +34,7 @@ import retrofit2.Response;
 
 public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnItemClickListener{
     private Data data;
+    private Button button;
     public PedidoFragment(){
 
     }
@@ -40,23 +43,61 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
                              Bundle savedInstanceState) {
         // se carga el fxml de listaplatos que es el que contiene el contenido y se devuelve para que el fragmento lo cargue
         View view = inflater.inflate(R.layout.pedidovista, container, false);
+        button = view.findViewById(R.id.btnConfirmar);
 
         if(getArguments() != null){
             this.data = getArguments().getParcelable("data");
             System.out.println("comunicacion correcta");
-            this.inicializar(view);
+            this.recibirPedido(view);
         }
 
         return view;
     }
 
-    /**
-     * Método que carga la lista de platos en el recyclerview, hace una petición para
-     * obtener la lista de platos disponibles
-     * @param view
-     */
-    public void inicializar(View view){
+    public void recibirPedido(View view){
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+        Call<Pedido> call = api.getpedido(data.getPedido().getId());
+        call.enqueue(new Callback<Pedido>() {
+            @Override
+            public void onResponse(Call<Pedido> call, Response<Pedido> response) {
+//                si la respuesta es satisfactoria se cargan los platos de la base de datos
+                if (response.isSuccessful()) {
+                    System.out.println(response.body());
 
+                    Pedido item = (Pedido) response.body();
+                    if (item!=null){
+                        data.setPedido(item);
+                        recorrer(view);
+                    }
+
+
+
+                }else {
+                    int statusCode = response.code();
+                    System.out.println(statusCode);
+                    System.out.println("respuesta mal");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Pedido> call, Throwable t) {
+                System.out.println("error");
+                System.out.println(t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void onItemClickConsumicion(int position) {
+        this.data.getPedido().getConsumiciones().remove(position);
+        RecyclerView recyclerView = getView().findViewById(R.id.contenedorPrimeros);
+        ConsumicionAdapter adapter = (ConsumicionAdapter) recyclerView.getAdapter();
+        adapter.notifyItemRemoved(position);
+        adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+
+    }
+    public void recorrer(View view){
         RecyclerView recyclerView = view.findViewById(R.id.contenedorPrimeros);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         System.out.println("aqui");
@@ -73,15 +114,5 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
                 getResources().getDisplayMetrics()
         );
         recyclerView.addItemDecoration(new Margen(espacio,true));
-    }
-
-    @Override
-    public void onItemClickConsumicion(int position) {
-        this.data.getPedido().getConsumiciones().remove(position);
-        RecyclerView recyclerView = getView().findViewById(R.id.contenedorPrimeros);
-        ConsumicionAdapter adapter = (ConsumicionAdapter) recyclerView.getAdapter();
-        adapter.notifyItemRemoved(position);
-        adapter.notifyItemRangeChanged(position, adapter.getItemCount());
-
     }
 }

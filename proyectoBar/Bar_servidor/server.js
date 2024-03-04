@@ -56,10 +56,21 @@ const esquemaMenusDia = new Schema({
 }, {
     versionKey: false
 });
+const esquemaMenusMeter = new Schema({
+    dia: String,
+    primeros: [esquemaPlato],
+    segundos: [esquemaPlato],
+    bebidas: [esquemaBebida],
+    cantidad : Number,
+    precio: Number
+}, {
+    versionKey: false
+});
 const esquemaPedidos = new Schema({
     id: Number,
     nombre_mesa: String,
     consumiciones: Array,
+    menus : [esquemaMenusMeter],
     estado: String,
     precio: Number
 }, {
@@ -140,14 +151,22 @@ app.get('/api/pedidos', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
+app.get('/api/pedido/:id', async (req, res) => {
+    try {
+        let pedidoEncontrado = await pedido.findOne({id : req.params.id});
+        res.status(200).json(pedidoEncontrado);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
 //#endregion get
 
 //#region put
 
-app.put('/api/pedido:id', async (req, res) => {
+app.put('/api/pedido/:id', async (req, res) => {
     try {
         console.log(req.body);
-        await pedido.findOneAndUpdate({ titulo: req.params.id }, req.body);
+        await pedido.findOneAndUpdate({ id: req.params.id }, req.body);
         res.sendStatus(200);
     } catch (err) {
         console.log(err.message);
@@ -252,6 +271,21 @@ app.put('/api/ocuparReserva/:nombreMesa', async (req, res) => {
     } catch (error) {
         console.log(error.message)
         res.status(500).json({ message: "Error al actualizar la reserva", error: error });
+    }
+});
+
+app.put('/api/meterConsumicion/:id', async (req, res) => {
+    let id = req.params.id
+    const { consumicion } = req.body;
+    try {
+            await pedido.findOneAndUpdate(
+            { id: id },
+            { $push: { consumiciones: consumicion } }
+        );
+        res.status(200).json({ message: "Consumicion Añadida Correctamente" });
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({ message: "Error al añadir la consumicion", error: error });
     }
 });
 

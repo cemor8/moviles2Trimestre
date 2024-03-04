@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="180sp"
     android:layout_height="wrap_content"
     android:background="@drawable/cadaplato"
     android:gravity="center_horizontal"
@@ -32,6 +32,7 @@
         android:layout_marginBottom="10dp"
         android:text="Precio del Plato"
         android:textColor="@color/white" />
+
     <TextView
         android:id="@+id/cantidadConsumicion"
         android:layout_width="wrap_content"
@@ -46,5 +47,5 @@
         android:layout_height="50dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/acento"
-        android:text="Añadir" />
+        android:text="Eliminar" />
 </LinearLayout>
