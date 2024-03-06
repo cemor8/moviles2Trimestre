@@ -18,7 +18,7 @@ import modelo.Bebida;
 public class BebidasAdapter extends RecyclerView.Adapter<BebidasAdapter.BebidasViewHolder> {
     private ArrayList<Bebida> listaBebidas;
 //    posicion en la lista del elemento el cual el ultimo botón se ha clickado
-    private int ultimoBoton = -1;
+    public int ultimoBoton = -1;
     public Button btn;
 //    método para asignar al boton
     private BebidasAdapter.OnItemClickListener listener;

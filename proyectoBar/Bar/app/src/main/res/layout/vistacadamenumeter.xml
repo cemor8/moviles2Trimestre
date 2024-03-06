@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_marginStart="70dp"
+        android:layout_width="115dp"
+        android:layout_marginTop="20dp"
+        android:layout_height="40dp"
+        android:text="Primero"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="27dp"
+        tools:layout_editor_absoluteY="64dp" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="235dp"
+            android:layout_height="153dp"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/cadaplato"
+            tools:layout_editor_absoluteX="81dp"
+            tools:layout_editor_absoluteY="141dp">
+
+            <ImageView
+                android:id="@+id/fotoPrimero"
+                android:layout_width="90dp"
+                android:layout_height="78dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="73dp"
+                android:scaleType="fitXY"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/cocacola" />
+
+            <TextView
+                android:id="@+id/nombrePrimero"
+                android:layout_width="80dp"
+                android:layout_height="23dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="71dp"
+                android:text="TextView"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fotoPrimero" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="115dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="20dp"
+            android:text="Segundo"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            tools:layout_editor_absoluteX="27dp"
+            tools:layout_editor_absoluteY="64dp" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="235dp"
+            android:layout_height="153dp"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/cadaplato"
+            android:backgroundTint="@color/fondo2"
+            tools:layout_editor_absoluteX="81dp"
+            tools:layout_editor_absoluteY="141dp">
+
+            <ImageView
+                android:id="@+id/fotoSegundo"
+                android:layout_width="90dp"
+                android:layout_height="78dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="73dp"
+                android:scaleType="fitXY"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/cocacola" />
+
+            <TextView
+                android:id="@+id/nombreSegundo"
+                android:layout_width="80dp"
+                android:layout_height="23dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="71dp"
+                android:text="TextView"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fotoSegundo" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="115dp"
+            android:layout_height="40dp"
+            android:text="Bebida"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            tools:layout_editor_absoluteX="27dp"
+            tools:layout_editor_absoluteY="64dp" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="235dp"
+            android:layout_height="153dp"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/cadaplato"
+            android:backgroundTint="@color/fondo2"
+            tools:layout_editor_absoluteX="81dp"
+            tools:layout_editor_absoluteY="141dp">
+
+            <ImageView
+                android:id="@+id/fotoBebida"
+                android:layout_width="90dp"
+                android:layout_height="78dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="73dp"
+                android:scaleType="fitXY"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/cocacola" />
+
+            <TextView
+                android:id="@+id/tvnombreBebida"
+                android:layout_width="80dp"
+                android:layout_height="23dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="71dp"
+                android:text="TextView"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fotoBebida" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="201dp"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="24dp"
+            android:layout_height="120dp">
+
+            <Button
+                android:id="@+id/btnMeterPlato"
+                android:layout_width="110dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="44dp"
+                android:backgroundTint="@color/acento"
+                android:onClick="volver"
+                android:text="Volver"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+</ScrollView>

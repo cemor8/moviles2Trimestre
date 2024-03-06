@@ -17,7 +17,7 @@ import modelo.Plato;
 
 public class SegundosAdapter extends RecyclerView.Adapter<SegundosAdapter.SegundosViewHolder> {
     private ArrayList<Plato> listaPlatosMenu;
-    private int ultimoBoton = -1;
+    public int ultimoBoton = -1;
     public Button btn;
     private SegundosAdapter.OnItemClickListener listener;
 

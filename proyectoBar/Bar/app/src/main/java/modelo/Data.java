@@ -19,7 +19,6 @@ public class Data implements Parcelable {
     ArrayList<Plato> listaPlatosRestaurante = new ArrayList<>();
     private Mesa mesaSeleccionada;
     private Menu menuDia;
-    private Menu construirMenu;
 
     ArrayList<Mesa> mesasRestaurante = new ArrayList<>();
     private Pedido pedido;
@@ -39,7 +38,6 @@ public class Data implements Parcelable {
         this.listaPlatosRestaurante = in.createTypedArrayList(Plato.CREATOR);
         this.mesaSeleccionada = in.readParcelable(Mesa.class.getClassLoader());
         this.menuDia = in.readParcelable(Menu.class.getClassLoader());
-        this.construirMenu = in.readParcelable(Menu.class.getClassLoader());
         this.mesasRestaurante = in.createTypedArrayList(Mesa.CREATOR);
         this.pedido = in.readParcelable(Pedido.class.getClassLoader());
     }
@@ -70,7 +68,6 @@ public class Data implements Parcelable {
         dest.writeTypedList(this.listaPlatosRestaurante);
         dest.writeParcelable(this.mesaSeleccionada,flags);
         dest.writeParcelable(this.menuDia,flags);
-        dest.writeParcelable(this.construirMenu,flags);
         dest.writeTypedList(this.mesasRestaurante);
         dest.writeParcelable(this.pedido,flags);
     }
@@ -113,14 +110,6 @@ public class Data implements Parcelable {
 
     public void setMenuDia(Menu menuDia) {
         this.menuDia = menuDia;
-    }
-
-    public Menu getConstruirMenu() {
-        return construirMenu;
-    }
-
-    public void setConstruirMenu(Menu construirMenu) {
-        this.construirMenu = construirMenu;
     }
 
     public ArrayList<Mesa> getMesasRestaurante() {

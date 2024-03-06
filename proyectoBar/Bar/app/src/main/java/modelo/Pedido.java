@@ -10,8 +10,8 @@ import java.util.ArrayList;
 public class Pedido implements Parcelable {
     private String nombre_mesa;
     private Integer precio;
-    private ArrayList<Consumicion> consumiciones = new ArrayList<>();
-    private ArrayList<MenuMeter> menus = new ArrayList<>();
+    private ArrayList<Consumicion> consumiciones;
+    private ArrayList<MenuMeter> menus;
     private String estado;
     private int id;
 
@@ -121,8 +121,8 @@ public class Pedido implements Parcelable {
             dest.writeInt(precio);
         }
         dest.writeString(estado);
-        dest.writeInt(id);
         dest.writeTypedList(menus);
         dest.writeTypedList(consumiciones);
+        dest.writeInt(id);
     }
 }

@@ -9,25 +9,26 @@ import java.util.ArrayList;
 
 public class MenuMeter implements Parcelable{
     private String dia;
-    private ArrayList<Plato> primeros;
-    private ArrayList<Plato> segundos;
-    private ArrayList<Bebida> bebidas;
+    private Plato primero;
+    private Plato segundo;
+    private Bebida bebida;
     private Integer cantidad;
     private Double precio;
 
-    public MenuMeter(String dia, ArrayList<Plato> primeros, ArrayList<Plato> segundos, ArrayList<Bebida> bebidas, Double precio) {
+    public MenuMeter(String dia, Plato primero, Plato segundo, Bebida bebida, Integer cantidad, Double precio) {
         this.dia = dia;
-        this.primeros = primeros;
-        this.segundos = segundos;
-        this.bebidas = bebidas;
+        this.primero = primero;
+        this.segundo = segundo;
+        this.bebida = bebida;
+        this.cantidad = cantidad;
         this.precio = precio;
     }
 
     protected MenuMeter(Parcel in) {
         dia = in.readString();
-        primeros = in.createTypedArrayList(Plato.CREATOR);
-        segundos = in.createTypedArrayList(Plato.CREATOR);
-        bebidas = in.createTypedArrayList(Bebida.CREATOR);
+        primero = in.readTypedObject(Plato.CREATOR);
+        segundo = in.readTypedObject(Plato.CREATOR);
+        bebida = in.readTypedObject(Bebida.CREATOR);
         cantidad = in.readInt();
         precio = in.readDouble();
     }
@@ -48,16 +49,36 @@ public class MenuMeter implements Parcelable{
         return dia;
     }
 
-    public ArrayList<Plato> getPrimeros() {
-        return primeros;
+    public Plato getPrimero() {
+        return primero;
     }
 
-    public ArrayList<Plato> getSegundos() {
-        return segundos;
+    public void setPrimero(Plato primero) {
+        this.primero = primero;
     }
 
-    public ArrayList<Bebida> getBebidas() {
-        return bebidas;
+    public void setSegundo(Plato segundo) {
+        this.segundo = segundo;
+    }
+
+    public void setBebida(Bebida bebida) {
+        this.bebida = bebida;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public Plato getSegundo() {
+        return segundo;
+    }
+
+    public Bebida getBebida() {
+        return bebida;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
     }
 
     public Double getPrecio() {
@@ -68,17 +89,7 @@ public class MenuMeter implements Parcelable{
         this.dia = dia;
     }
 
-    public void setPrimeros(ArrayList<Plato> primeros) {
-        this.primeros = primeros;
-    }
 
-    public void setSegundos(ArrayList<Plato> segundos) {
-        this.segundos = segundos;
-    }
-
-    public void setBebidas(ArrayList<Bebida> bebidas) {
-        this.bebidas = bebidas;
-    }
 
     public void setPrecio(Double precio) {
         this.precio = precio;
@@ -92,9 +103,9 @@ public class MenuMeter implements Parcelable{
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(dia);
-        dest.writeTypedList(primeros);
-        dest.writeTypedList(segundos);
-        dest.writeTypedList(bebidas);
+        dest.writeTypedObject(primero,flags);
+        dest.writeTypedObject(segundo,flags);
+        dest.writeTypedObject(bebida,flags);
         dest.writeInt(cantidad);
         dest.writeDouble(precio);
     }

@@ -18,7 +18,7 @@ import modelo.Plato;
 public class PrimerosAdapter extends RecyclerView.Adapter<PrimerosAdapter.PrimerosViewHolder> {
     private ArrayList<Plato> listaPlatosMenu;
     //    posicion en la lista del elemento el cual el ultimo botón se ha clickado
-    private int ultimoBoton = -1;
+    public int ultimoBoton = -1;
     public Button btn;
     public PrimerosAdapter.OnItemClickListener listener;
 

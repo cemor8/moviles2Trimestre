@@ -139,7 +139,7 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
 
                 if (response.isSuccessful()) {
                     plato.setCantidad(plato.getCantidad() - cantidad);
-                    System.out.println(data.getListaPlatosRestaurante());
+                    modificarPedido();
                 }else {
                     int statusCode = response.code();
                     System.out.println(statusCode);
@@ -180,5 +180,31 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
             return;
         }
         textView.setText(String.valueOf(cantidad-1));
+    }
+
+    public void modificarPedido(){
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+        Call<ResponseBody> call = api.modificarPedido(data.getPedido().getId(),data.getPedido());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                if (response.isSuccessful()) {
+                    System.out.println("correcto");
+
+                }else {
+                    int statusCode = response.code();
+                    System.out.println(statusCode);
+                    System.out.println("respuesta mal");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                System.out.println("error");
+                System.out.println(t.getMessage());
+            }
+        });
     }
 }

@@ -58,9 +58,9 @@ const esquemaMenusDia = new Schema({
 });
 const esquemaMenusMeter = new Schema({
     dia: String,
-    primeros: [esquemaPlato],
-    segundos: [esquemaPlato],
-    bebidas: [esquemaBebida],
+    primeros: esquemaPlato,
+    segundos: esquemaPlato,
+    bebidas: esquemaBebida,
     cantidad : Number,
     precio: Number
 }, {
