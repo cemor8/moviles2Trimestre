@@ -55,6 +55,9 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
     Plato primeroSeleccionado;
     Plato segundoSeleccionado;
     Bebida bebidaSeleccionada;
+    private RecyclerView recyclerPrimeros;
+    private RecyclerView recyclerSegundos;
+    private RecyclerView recyclerBebidas;
     public MenusFragment(){
 
     }
@@ -67,8 +70,9 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
         btnMeter.setOnClickListener(this::sumar);
         btnQuitar = view.findViewById(R.id.quitar);
         btnQuitar.setOnClickListener(this::quitar);
-        tvCantidad = view.findViewById(R.id.cantidad);
+        tvCantidad = view.findViewById(R.id.cantidadMenu);
 
+        this.cantidad = Integer.parseInt(String.valueOf(tvCantidad.getText()));
 
         if(getArguments() != null){
             this.data = getArguments().getParcelable("data");
@@ -132,9 +136,11 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
         TextView textView = view.findViewById(R.id.nombreMenuDia);
         textView.setText("Menú "+this.data.getMenuDia().getDia());
         RecyclerView recyclerView = view.findViewById(R.id.contenedorPrimeros);
+        this.recyclerPrimeros = recyclerView;
         RecyclerView recyclerView2 = view.findViewById(R.id.contenedorSegundos);
+        this.recyclerSegundos = recyclerView2;
         RecyclerView recyclerView3 = view.findViewById(R.id.contenedorBebidas);
-
+        this.recyclerBebidas = recyclerView3;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         PrimerosAdapter adapter = new PrimerosAdapter(data.getMenuDia().getPrimeros());
         adapter.setOnItemClickListener(this::onItemClickPrimero);
@@ -170,6 +176,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
     public void onItemClickPrimero(int position) {
         Plato primero = this.data.getMenuDia().getPrimeros().get(position);
         this.primeroSeleccionado = primero;
+        System.out.println(primeroSeleccionado);
 
     }
     /**
@@ -180,6 +187,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
     public void onItemClickSegundo(int position) {
         Plato segundo = this.data.getMenuDia().getSegundos().get(position);
         this.segundoSeleccionado = segundo;
+        System.out.println(segundoSeleccionado);
 
     }
     /**
@@ -190,6 +198,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
     public void onItemClickBebida(int position) {
         Bebida bebida = this.data.getMenuDia().getBebidas().get(position);
         this.bebidaSeleccionada = bebida;
+        System.out.println(bebidaSeleccionada);
 
     }
 
@@ -198,11 +207,13 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
      * @param view
      */
     public void meterMenu(View view){
-        if (this.bebidaSeleccionada == null || this.primeroSeleccionado == null || this.segundoSeleccionado == null){
+        if (this.bebidaSeleccionada == null || this.primeroSeleccionado == null || this.segundoSeleccionado == null || cantidad == null){
             return;
         }
         MenuMeter menuMeter = new MenuMeter(data.getMenuDia().getDia(),this.primeroSeleccionado,this.segundoSeleccionado,this.bebidaSeleccionada,cantidad,data.getMenuDia().getPrecio());
         Api api = ConexionRetrofit.getConexion().create(Api.class);
+        System.out.println(data.getPedido());
+        System.out.println(menuMeter);
         Call<ResponseBody> call = api.meterMenu(data.getPedido().getId(),menuMeter);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -247,21 +258,24 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
         bebidaSeleccionada = null;
         this.cantidad = 1;
         tvCantidad.setText("1");
-        RecyclerView recyclerView = view.findViewById(R.id.contenedorPrimeros);
-        RecyclerView recyclerView2 = view.findViewById(R.id.contenedorSegundos);
-        RecyclerView recyclerView3 = view.findViewById(R.id.contenedorBebidas);
-        PrimerosAdapter primerosAdapter = (PrimerosAdapter) recyclerView.getAdapter();
-        primerosAdapter.ultimoBoton = -1;
 
-        SegundosAdapter segundosAdapter = (SegundosAdapter) recyclerView2.getAdapter();
-        segundosAdapter.ultimoBoton = -1;
+        if (this.recyclerPrimeros != null && recyclerPrimeros.getAdapter() instanceof PrimerosAdapter) {
+            PrimerosAdapter primerosAdapter = (PrimerosAdapter) recyclerPrimeros.getAdapter();
+            primerosAdapter.ultimoBoton = -1;
+            primerosAdapter.notifyDataSetChanged();
+        }
 
-        BebidasAdapter bebidasAdapter = (BebidasAdapter) recyclerView3.getAdapter();
-        bebidasAdapter.ultimoBoton = -1;
+        if (recyclerSegundos != null && recyclerSegundos.getAdapter() instanceof SegundosAdapter) {
+            SegundosAdapter segundosAdapter = (SegundosAdapter) recyclerSegundos.getAdapter();
+            segundosAdapter.ultimoBoton = -1;
+            segundosAdapter.notifyDataSetChanged();
+        }
 
-        bebidasAdapter.notifyDataSetChanged();
-        primerosAdapter.notifyDataSetChanged();
-        segundosAdapter.notifyDataSetChanged();
+        if (recyclerBebidas != null && recyclerBebidas.getAdapter() instanceof BebidasAdapter) {
+            BebidasAdapter bebidasAdapter = (BebidasAdapter) recyclerBebidas.getAdapter();
+            bebidasAdapter.ultimoBoton = -1;
+            bebidasAdapter.notifyDataSetChanged();
+        }
     }
 
 
@@ -307,6 +321,9 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
      * @param view
      */
     public void restarCantidades(View view){
+        System.out.println("Restando");
+        System.out.println("Primero");
+        System.out.println(primeroSeleccionado);
         Api api = ConexionRetrofit.getConexion().create(Api.class);
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), "{ \"cantidad\": " + cantidad + " }");
         Call<ResponseBody> call = api.restarPlatos(primeroSeleccionado.getNombre(),body);
@@ -314,9 +331,11 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                System.out.println("primeso seleccionado");
+                System.out.println(primeroSeleccionado);
                 if (response.isSuccessful()) {
                     primeroSeleccionado.setCantidad(primeroSeleccionado.getCantidad() - cantidad);
+                    restarSegundo(view);
                 }else {
                     int statusCode = response.code();
                     System.out.println(statusCode);
@@ -333,9 +352,18 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
         });
 
 
-        api = ConexionRetrofit.getConexion().create(Api.class);
-        body = RequestBody.create(MediaType.parse("application/json"), "{ \"cantidad\": " + cantidad + " }");
-        call = api.restarPlatos(segundoSeleccionado.getNombre(),body);
+
+
+
+
+    }
+
+    public void restarSegundo(View view){
+        System.out.println("segundo");
+        System.out.println(segundoSeleccionado);
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), "{ \"cantidad\": " + cantidad + " }");
+        Call<ResponseBody> call = api.restarPlatos(segundoSeleccionado.getNombre(),body);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -343,6 +371,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
 
                 if (response.isSuccessful()) {
                     segundoSeleccionado.setCantidad(segundoSeleccionado.getCantidad() - cantidad);
+                    restarBebida(view);
                 }else {
                     int statusCode = response.code();
                     System.out.println(statusCode);
@@ -357,18 +386,21 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
                 System.out.println(t.getMessage());
             }
         });
+    }
 
-
-
-        api = ConexionRetrofit.getConexion().create(Api.class);
-        body = RequestBody.create(MediaType.parse("application/json"), "{ \"cantidad\": " + cantidad + " }");
-        call = api.restarBebida(bebidaSeleccionada.getNombre(),body);
-
+    public void restarBebida(View view){
+        System.out.println("bebida");
+        System.out.println(bebidaSeleccionada);
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), "{ \"cantidad\": " + cantidad + " }");
+        Call<ResponseBody> call = api.restarBebida(bebidaSeleccionada.getNombre(),body);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 if (response.isSuccessful()) {
+                    System.out.println("bebida");
+                    System.out.println(bebidaSeleccionada);
                     bebidaSeleccionada.setCantidad(bebidaSeleccionada.getCantidad() - cantidad);
                     reiniciarSeleccionados(view);
                 }else {
@@ -385,9 +417,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
                 System.out.println(t.getMessage());
             }
         });
-
     }
-
     /**
      * Método que suma la cantidad de menus a pedir
      * @param view

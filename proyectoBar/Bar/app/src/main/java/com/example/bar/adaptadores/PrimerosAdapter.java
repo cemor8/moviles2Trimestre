@@ -55,7 +55,7 @@ public class PrimerosAdapter extends RecyclerView.Adapter<PrimerosAdapter.Primer
                         notifyItemChanged(position);
                     }
                     listener.onItemClickPrimero(position);
-                    System.out.println("hola");
+
                 }else {
                     System.out.println("es nyl");
                 }

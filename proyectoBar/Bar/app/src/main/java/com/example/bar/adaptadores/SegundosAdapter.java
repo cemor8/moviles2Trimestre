@@ -58,7 +58,6 @@ public class SegundosAdapter extends RecyclerView.Adapter<SegundosAdapter.Segund
                         notifyItemChanged(position);
                     }
                     listener.onItemClickSegundo(position);
-                    System.out.println("hola");
                 }else {
                     System.out.println("es nyl");
                 }

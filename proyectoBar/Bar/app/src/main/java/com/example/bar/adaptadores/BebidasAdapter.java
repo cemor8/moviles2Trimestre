@@ -63,7 +63,7 @@ public class BebidasAdapter extends RecyclerView.Adapter<BebidasAdapter.BebidasV
                         notifyItemChanged(position);
                     }
                     listener.onItemClickBebida(position);
-                    System.out.println("hola");
+
                 }else {
                     System.out.println("es nyl");
                 }

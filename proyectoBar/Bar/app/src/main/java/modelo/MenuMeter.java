@@ -109,4 +109,16 @@ public class MenuMeter implements Parcelable{
         dest.writeInt(cantidad);
         dest.writeDouble(precio);
     }
+
+    @Override
+    public String toString() {
+        return "MenuMeter{" +
+                "dia='" + dia + '\'' +
+                ", primero=" + primero +
+                ", segundo=" + segundo +
+                ", bebida=" + bebida +
+                ", cantidad=" + cantidad +
+                ", precio=" + precio +
+                '}';
+    }
 }

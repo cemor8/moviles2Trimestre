@@ -56,6 +56,7 @@ const esquemaMenusDia = new Schema({
 }, {
     versionKey: false
 });
+/*
 const esquemaMenusMeter = new Schema({
     dia: String,
     primeros: esquemaPlato,
@@ -66,11 +67,12 @@ const esquemaMenusMeter = new Schema({
 }, {
     versionKey: false
 });
+*/
 const esquemaPedidos = new Schema({
     id: Number,
     nombre_mesa: String,
     consumiciones: Array,
-    menus : [esquemaMenusMeter],
+    menus : Array,
     estado: String,
     precio: Number
 }, {
@@ -276,12 +278,10 @@ app.put('/api/ocuparReserva/:nombreMesa', async (req, res) => {
 
 app.put('/api/meterMenu/:id', async (req, res) => {
     let id = req.params.id
-    const { menu } = req.body;
     try {
-            await pedido.findOneAndUpdate(
-            { id: id },
-            { $push: { menus: menu } }
-        );
+        let test = await pedido.findOneAndUpdate(
+        { id: id },
+        { $push: { menus: req.body } });
         res.status(200).json({ message: "Menu añadido correctamente" });
     } catch (error) {
         console.log(error.message)

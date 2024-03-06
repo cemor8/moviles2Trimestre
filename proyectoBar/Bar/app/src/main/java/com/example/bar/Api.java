@@ -45,7 +45,7 @@ public interface Api {
     Call<ResponseBody> restarBebida(@Path("nombre") String nombreBebida, @Body RequestBody cantidad);
     @PUT("/api/ocuparReserva/{nombreMesa}")
     Call<ResponseBody> ocuparReserva(@Path("nombreMesa") String nombreMesa);
-    @POST("/api/meterMenu/{id}")
+    @PUT("/api/meterMenu/{id}")
     Call<ResponseBody> meterMenu(@Path("id") int id,@Body MenuMeter menu);
     @POST("/api/meterConsumicion/{id}")
     Call<ResponseBody> meterConsumicion(@Path("id") int id,@Body Consumicion consumicion);
