@@ -99,6 +99,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
                     String dia = formato.format(calendario.getTime());
                     Optional<Menu> menu = items.stream().filter(menu1 -> menu1.getDia().equalsIgnoreCase(dia)).findAny();
                     if (!menu.isPresent()){
+                        System.out.println(dia);
                         return;
                     }
                     data.setMenuDia(menu.get());
@@ -200,8 +201,6 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
         if (this.bebidaSeleccionada == null || this.primeroSeleccionado == null || this.segundoSeleccionado == null){
             return;
         }
-        TextView textView = view.findViewById(R.id.cantidad);
-        this.cantidad = Integer.parseInt(String.valueOf(textView.getText()));
         MenuMeter menuMeter = new MenuMeter(data.getMenuDia().getDia(),this.primeroSeleccionado,this.segundoSeleccionado,this.bebidaSeleccionada,cantidad,data.getMenuDia().getPrecio());
         Api api = ConexionRetrofit.getConexion().create(Api.class);
         Call<ResponseBody> call = api.meterMenu(data.getPedido().getId(),menuMeter);
@@ -218,7 +217,6 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
                     }else {
                         data.getPedido().getMenus().add(menuMeter);
                     }
-
                     restarCantidades(view);
 
 

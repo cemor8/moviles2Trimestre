@@ -274,6 +274,21 @@ app.put('/api/ocuparReserva/:nombreMesa', async (req, res) => {
     }
 });
 
+app.put('/api/meterMenu/:id', async (req, res) => {
+    let id = req.params.id
+    const { menu } = req.body;
+    try {
+            await pedido.findOneAndUpdate(
+            { id: id },
+            { $push: { menus: menu } }
+        );
+        res.status(200).json({ message: "Menu añadido correctamente" });
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({ message: "Error al añadir el menu", error: error });
+    }
+});
+
 app.put('/api/meterConsumicion/:id', async (req, res) => {
     let id = req.params.id
     const { consumicion } = req.body;
