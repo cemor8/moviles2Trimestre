@@ -1,7 +1,10 @@
 package com.example.bar.Fragmentos;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.TypedValue;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,11 +117,32 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
         recyclerView.addItemDecoration(new Margen(espacio,false));
     }
 
+    /**
+     * Método que se encarga de meter la bebida en la lista de consumiciones del pedido
+     * @param position
+     * @param textView
+     */
     @Override
     public void onItemClick(int position,TextView textView) {
 
 
-        /* Comprobar estado pedido, si se puede deja añadir, si no no */
+
+        if (this.data.getPedido().getEstado().equalsIgnoreCase("Preparando")){
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+            builder.setTitle("Pedido en preparación");
+            builder.setMessage("El pedido esta en preparación por nuestro cocinero, no es posible modificarlo");
+
+            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return;
+        }
 
         Integer cantidad = Integer.valueOf(String.valueOf(textView.getText()));
         Bebida bebida = this.data.getListaBebidasRestaurante().get(position);
@@ -144,6 +168,8 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
         Api api = ConexionRetrofit.getConexion().create(Api.class);
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), "{ \"cantidad\": " + cantidad + " }");
         Call<ResponseBody> call = api.restarBebida(bebida.getNombre(),body);
+
+        /* se resta la bebida en la base de datos */
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -203,7 +229,11 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
     }
 
 
-
+    /**
+     * Método que se encarga de sumar la cantidad de la bebida a pedir
+     * @param textView
+     * @param position
+     */
     @Override
     public void sumar(TextView textView, int position) {
         Integer cantidad = Integer.valueOf(String.valueOf(textView.getText()));
@@ -216,6 +246,11 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
         textView.setText(String.valueOf(cantidad+1));
     }
 
+    /**
+     * Método que se encarga de restar la cantidad de la bebida a pedir
+     * @param textView
+     * @param position
+     */
     @Override
     public void restar(TextView textView, int position) {
         Integer cantidad = Integer.valueOf(String.valueOf(textView.getText()));

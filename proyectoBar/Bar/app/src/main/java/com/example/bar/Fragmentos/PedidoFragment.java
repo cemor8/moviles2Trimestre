@@ -36,6 +36,7 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
     private Data data;
     private Button button;
     private RecyclerView recyclerViewCons;
+    private Button btnPagar;
     private RecyclerView recyclerViewMen;
     public PedidoFragment(){
 
@@ -49,6 +50,9 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
         button.setOnClickListener(this::confirmarPedido);
         this.recyclerViewMen = view.findViewById(R.id.contenedorMenusMeter);
         this.recyclerViewCons = view.findViewById(R.id.contenedorConsumiciones);
+        this.btnPagar = view.findViewById(R.id.btnPagar);
+        btnPagar.setOnClickListener(this::pagarPedido);
+        btnPagar.setEnabled(data.getPedido().getEstado().equalsIgnoreCase("Servido"));
 
         if(getArguments() != null){
             this.data = getArguments().getParcelable("data");
@@ -100,6 +104,13 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
         dialog.show();
         this.button.setEnabled(false);
 
+
+    }
+
+    public void pagarPedido(View view){
+
+        this.data.getPedido().setEstado("Pagado");
+        modificarPedido();
 
     }
 

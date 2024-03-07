@@ -141,13 +141,6 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
                     dialog.dismiss();
                 }
             });
-            builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                    dialog.dismiss();
-                }
-            });
 
             AlertDialog dialog = builder.create();
             dialog.show();
