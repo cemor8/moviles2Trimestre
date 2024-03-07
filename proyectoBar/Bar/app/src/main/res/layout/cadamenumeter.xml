@@ -13,7 +13,7 @@
         android:layout_height="94dp"
         android:layout_marginBottom="14dp"
         android:scaleType="fitXY"
-        android:src="@drawable/cocacola" />
+        android:src="@drawable/menu" />
 
     <TextView
         android:id="@+id/nombreMenuMeter"

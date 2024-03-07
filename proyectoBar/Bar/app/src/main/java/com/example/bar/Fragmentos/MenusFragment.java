@@ -20,6 +20,7 @@ import com.example.bar.Api;
 import com.example.bar.Margen;
 import com.example.bar.R;
 import com.example.bar.adaptadores.BebidasAdapter;
+import com.example.bar.adaptadores.PlatosAdapter;
 import com.example.bar.adaptadores.PrimerosAdapter;
 import com.example.bar.adaptadores.SegundosAdapter;
 
@@ -62,6 +63,8 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.menusdia, container, false);
+        /* se establecen onclicks de elementos de la vista del fragment */
+
         btn = view.findViewById(R.id.btnMeterMenu);
         btn.setOnClickListener(this::meterMenu);
         btnMeter = view.findViewById(R.id.meter);
@@ -269,6 +272,11 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
         modificarPedido(view);
     }
 
+    /**
+     * Método que se encarga de modificar un pedido en la base de datos con los nuevos datos
+     * del pedido
+     * @param view
+     */
     public void modificarPedido(View view){
         Api api = ConexionRetrofit.getConexion().create(Api.class);
         Call<ResponseBody> call = api.modificarPedido(data.getPedido().getId(),data.getPedido());
@@ -401,13 +409,12 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
             }
         });
 
-
-
-
-
-
     }
 
+    /**
+     * Método que se encarga de restar las cantidades del segundo plato en la base de datos
+     * @param view
+     */
     public void restarSegundo(View view){
         System.out.println("segundo");
         System.out.println(segundoSeleccionado);
@@ -438,6 +445,10 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
         });
     }
 
+    /**
+     * Método que se encarga de restar la cantidad de la bebida en la base de datos
+     * @param view
+     */
     public void restarBebida(View view){
         System.out.println("bebida");
         System.out.println(bebidaSeleccionada);

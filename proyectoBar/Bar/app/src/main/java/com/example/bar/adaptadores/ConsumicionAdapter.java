@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bar.R;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import modelo.Consumicion;
 import modelo.Menu;
@@ -83,6 +84,26 @@ public class ConsumicionAdapter extends RecyclerView.Adapter<ConsumicionAdapter.
         holder.tvPrecioConsumicion.setText(String.valueOf(consumicion.getPrecio()));
         String cantidad = consumicion.getCantidad()+" unidades";
         holder.cantidadConsumicion.setText(cantidad);
+
+        if (consumicion.getNombre().toLowerCase(Locale.ROOT).contains("pulpo")){
+            holder.imgConsumicion.setImageResource(R.drawable.pulpo);
+        }else if(consumicion.getNombre().toLowerCase(Locale.ROOT).contains("rape")){
+            holder.imgConsumicion.setImageResource(R.drawable.fideua);
+        }else if(consumicion.getNombre().toLowerCase(Locale.ROOT).contains("tikka")){
+            holder.imgConsumicion.setImageResource(R.drawable.pollo);
+        }else if(consumicion.getNombre().toLowerCase(Locale.ROOT).contains("chipotle")){
+            holder.imgConsumicion.setImageResource(R.drawable.chipotle);
+        }else if(consumicion.getNombre().toLowerCase(Locale.ROOT).contains("mostaza")){
+            holder.imgConsumicion.setImageResource(R.drawable.mostaza);
+        }else if(consumicion.getNombre().toLowerCase(Locale.ROOT).contains("agua")){
+            holder.imgConsumicion.setImageResource(R.drawable.agua);
+        }else if(consumicion.getNombre().toLowerCase(Locale.ROOT).contains("kas")){
+            holder.imgConsumicion.setImageResource(R.drawable.kas);
+        }else if(consumicion.getNombre().toLowerCase(Locale.ROOT).contains("cocacola")){
+            holder.imgConsumicion.setImageResource(R.drawable.cocacola);
+        } else {
+            holder.imgConsumicion.setImageResource(R.drawable.pulpo);
+        }
 
     }
 

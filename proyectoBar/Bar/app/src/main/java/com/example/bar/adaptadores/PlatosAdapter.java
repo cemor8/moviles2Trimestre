@@ -15,6 +15,7 @@ import com.example.bar.R;
 import org.w3c.dom.Text;
 
 import java.util.List;
+import java.util.Locale;
 
 import modelo.Plato;
 
@@ -99,6 +100,12 @@ public class PlatosAdapter extends RecyclerView.Adapter<PlatosAdapter.PlatoViewH
         this.listener = onItemClickListener;
     }
 
+    /**
+     *
+     * @param holder The ViewHolder which should be updated to represent the contents of the
+     *        item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(PlatoViewHolder holder, int position) {
         Plato plato = listaPlatos.get(position);
@@ -108,6 +115,21 @@ public class PlatosAdapter extends RecyclerView.Adapter<PlatosAdapter.PlatoViewH
         holder.restar.setEnabled(plato.getCantidad() > 0);
         holder.añadir.setEnabled(plato.getCantidad() > 0);
         holder.btn.setEnabled(plato.getCantidad() > 0);
+
+        if (plato.getNombre().toLowerCase(Locale.ROOT).contains("pulpo")){
+            holder.imgPlato.setImageResource(R.drawable.pulpo);
+        }else if(plato.getNombre().toLowerCase(Locale.ROOT).contains("rape")){
+            holder.imgPlato.setImageResource(R.drawable.fideua);
+        }else if(plato.getNombre().toLowerCase(Locale.ROOT).contains("tikka")){
+            holder.imgPlato.setImageResource(R.drawable.pollo);
+        }else if(plato.getNombre().toLowerCase(Locale.ROOT).contains("chipotle")){
+            holder.imgPlato.setImageResource(R.drawable.chipotle);
+        }else if(plato.getNombre().toLowerCase(Locale.ROOT).contains("mostaza")){
+            holder.imgPlato.setImageResource(R.drawable.mostaza);
+        }else {
+            holder.imgPlato.setImageResource(R.drawable.pulpo);
+        }
+
     }
 
     @Override
@@ -115,8 +137,25 @@ public class PlatosAdapter extends RecyclerView.Adapter<PlatosAdapter.PlatoViewH
         return listaPlatos.size();
     }
     public interface OnItemClickListener {
+        /**
+         * Método que añade un plato a la lista de consumiciones del pedido
+         * @param position
+         * @param textView
+         */
         void onItemClick(int position, TextView textView);
+
+        /**
+         * Método que aumenta la cantidad de un plato a pedir
+         * @param textView
+         * @param position
+         */
         void sumar(TextView textView,int position);
+
+        /**
+         * Método que resta la cantidad de un plato a pedir
+         * @param textView
+         * @param position
+         */
         void restar(TextView textView,int position);
     }
 }

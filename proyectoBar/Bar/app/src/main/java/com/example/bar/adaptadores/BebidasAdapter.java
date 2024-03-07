@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bar.R;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import modelo.Bebida;
 
@@ -88,7 +89,15 @@ public class BebidasAdapter extends RecyclerView.Adapter<BebidasAdapter.BebidasV
     public void onBindViewHolder(BebidasAdapter.BebidasViewHolder holder, int position) {
         Bebida bebida = listaBebidas.get(position);
         holder.tvNombreBebida.setText(bebida.getNombre());
-        holder.btn.setEnabled(position != ultimoBoton);
+        holder.btn.setEnabled(position != ultimoBoton && bebida.getCantidad() > 0);
+
+        if(bebida.getNombre().toLowerCase(Locale.ROOT).contains("agua")){
+            holder.imgBebida.setImageResource(R.drawable.agua);
+        }else if(bebida.getNombre().toLowerCase(Locale.ROOT).contains("kas")){
+            holder.imgBebida.setImageResource(R.drawable.kas);
+        }else if(bebida.getNombre().toLowerCase(Locale.ROOT).contains("cocacola")){
+            holder.imgBebida.setImageResource(R.drawable.cocacola);
+        }
     }
 
     @Override

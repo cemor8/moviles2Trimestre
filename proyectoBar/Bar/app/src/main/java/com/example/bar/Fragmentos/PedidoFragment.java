@@ -118,6 +118,10 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
 
     }
 
+    /**
+     * Método que elimina del pedido el menú seleccionado
+     * @param position
+     */
     @Override
     public void eliminar(int position) {
         MenuMeter menuMeter = this.data.getPedido().getMenus().get(position);
@@ -129,6 +133,10 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
         sumarMenu(menuMeter);
     }
 
+    /**
+     * Método que abre la vista detallada del menu del día seleccionado
+     * @param position
+     */
     @Override
     public void ver(int position) {
         /* Vista detallada del menu */

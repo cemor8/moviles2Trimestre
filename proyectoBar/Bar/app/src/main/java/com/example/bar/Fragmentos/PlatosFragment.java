@@ -22,6 +22,7 @@ import com.example.bar.Api;
 import com.example.bar.Margen;
 import com.example.bar.R;
 import com.example.bar.adaptadores.PlatosAdapter;
+import com.example.bar.adaptadores.PrimerosAdapter;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -41,6 +42,7 @@ import retrofit2.Response;
 
 public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClickListener{
     private Data data;
+    private RecyclerView recyclerView;
     public PlatosFragment(){
 
     }
@@ -49,7 +51,7 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
                              Bundle savedInstanceState) {
         // se carga el fxml de listaplatos que es el que contiene el contenido y se devuelve para que el fragmento lo cargue
         View view = inflater.inflate(R.layout.listaplatos, container, false);
-
+        this.recyclerView = view.findViewById(R.id.contenedorListaPlatos);
         if(getArguments() != null){
             this.data = getArguments().getParcelable("data");
             System.out.println("comunicacion correcta");
@@ -120,6 +122,11 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
         recyclerView.addItemDecoration(new Margen(espacio,false));
     }
 
+    /**
+     * Método que se encarga de añadir un plato a la lista de consumciones del pedido
+     * @param position posicion del plato en la lista de platos
+     * @param textView  textview con la cantidad
+     */
     @Override
     public void onItemClick(int position, TextView textView) {
 
@@ -150,7 +157,8 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
         /* Comprobar estado pedido, si se puede deja añadir, si no no */
 
 
-
+        /* Obtener cantidad, crear consumicion, si ya esta ese plato añadido, se añade la cantidad a la consumicion de la lista, si no
+        * se añade el plato */
 
         Integer cantidad = Integer.valueOf(String.valueOf(textView.getText()));
         Plato plato = this.data.getListaPlatosRestaurante().get(position);
@@ -161,6 +169,20 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
 
                 /* Establecer pop up no se puede mas de 15 por plato*/
 
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+                builder.setTitle("Cantidad máxima alcanzada");
+                builder.setMessage("No se pueden pedir mas de 15 unidades del mismo plato o menú, añada otro");
+
+                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 return;
             }
            consumicionOptional.get().setCantidad(consumicionOptional.get().getCantidad() + consumicion.getCantidad());
@@ -168,6 +190,10 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
             this.data.getPedido().getConsumiciones().add(consumicion);
         }
         textView.setText("1");
+
+
+
+
 
         this.data.getPedido().setPrecio(this.data.getPedido().getPrecio() + consumicion.getPrecio() * cantidad);
 
@@ -182,6 +208,10 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
 
                 if (response.isSuccessful()) {
                     plato.setCantidad(plato.getCantidad() - cantidad);
+                    if (recyclerView != null && recyclerView.getAdapter() instanceof PlatosAdapter) {
+                        PlatosAdapter platosAdapter = (PlatosAdapter) recyclerView.getAdapter();
+                        platosAdapter.notifyDataSetChanged();
+                    }
                     modificarPedido();
                 }else {
                     int statusCode = response.code();
@@ -201,6 +231,11 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
 
     }
 
+    /**
+     * Método que aumenta la cantidad de un plato antes de añadirlo
+     * @param textView textview con la cantidad
+     * @param position posicion del plato en la lista
+     */
     @Override
     public void sumar(TextView textView,int position) {
         Integer cantidad = Integer.valueOf(String.valueOf(textView.getText()));
@@ -213,6 +248,11 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
         textView.setText(String.valueOf(cantidad+1));
     }
 
+    /**
+     * Método que resta cantidades a un plato a pedir
+     * @param textView  textview con la cantidad
+     * @param position  posicion del plato en la lista
+     */
     @Override
     public void restar(TextView textView,int position) {
         Integer cantidad = Integer.valueOf(String.valueOf(textView.getText()));
@@ -225,6 +265,10 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
         textView.setText(String.valueOf(cantidad-1));
     }
 
+    /**
+     * Método que se encarga de modificar el pedido en la base de datos con los
+     * nuevos datos del pedido
+     */
     public void modificarPedido(){
         Api api = ConexionRetrofit.getConexion().create(Api.class);
         Call<ResponseBody> call = api.modificarPedido(data.getPedido().getId(),data.getPedido());

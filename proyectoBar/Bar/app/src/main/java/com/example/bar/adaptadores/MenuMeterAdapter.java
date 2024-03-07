@@ -37,7 +37,10 @@ public class MenuMeterAdapter extends RecyclerView.Adapter<MenuMeterAdapter.Menu
         public TextView cantidadMenuMeter;
         public Button btn;
 
-
+        /**
+         *
+         * @param itemView
+         */
         public MenuMeterViewHolder(View itemView) {
             super(itemView);
 //            elementos de cada item
@@ -89,6 +92,14 @@ public class MenuMeterAdapter extends RecyclerView.Adapter<MenuMeterAdapter.Menu
         }
     }
 
+    /**
+     *
+     * @param parent The ViewGroup into which the new View will be added after it is bound to
+     *               an adapter position.
+     * @param viewType The view type of the new View.
+     *
+     * @return
+     */
     @Override
     public MenuMeterAdapter.MenuMeterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 //        se lee el xml de cadamenu ya que va a ser el molde para cada elemento del recyclerview
@@ -101,12 +112,19 @@ public class MenuMeterAdapter extends RecyclerView.Adapter<MenuMeterAdapter.Menu
         this.listener = onItemClickListener;
     }
 
+    /**
+     *
+     * @param holder The ViewHolder which should be updated to represent the contents of the
+     *        item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(MenuMeterAdapter.MenuMeterViewHolder holder, int position) {
         MenuMeter menuMeter = menusMeter.get(position);
 
         holder.tvNombreMenuMeter.setText("Menú del día");
-        holder.tvPrecioMenuMeter.setText(String.valueOf(menuMeter.getPrecio()));
+        String str = menuMeter.getPrecio() + " €";
+        holder.tvPrecioMenuMeter.setText(str);
         String cantidad = menuMeter.getCantidad()+" unidades";
         holder.cantidadMenuMeter.setText(cantidad);
 
@@ -116,8 +134,21 @@ public class MenuMeterAdapter extends RecyclerView.Adapter<MenuMeterAdapter.Menu
     public int getItemCount() {
         return menusMeter.size();
     }
+
+    /**
+     *  Interfaz que tiene los metodos onclick para modificarlos posteriormete segun la
+     *  necesidad del recycler
+     */
     public interface OnItemClickListener {
+        /**
+         * Método que elimina del pedido el menú seleccionado
+         * @param position posicion del elemento en la lista
+         */
         void eliminar(int position);
+        /**
+         * Método que abre la vista detallada del menu del día seleccionado
+         * @param position posicion del elemento en la lista
+         */
         void ver(int position);
     }
 

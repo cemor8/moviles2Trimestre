@@ -14,6 +14,7 @@ import com.example.bar.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import modelo.Bebida;
 import modelo.Plato;
@@ -101,6 +102,16 @@ public class ListaBebidasAdapter extends RecyclerView.Adapter<ListaBebidasAdapte
         Bebida bebida = listaBebidas.get(position);
         holder.tvNombreBebida.setText(bebida.getNombre());
         holder.tvPrecioBebida.setText(String.valueOf(bebida.getPrecio()) + " €");
+        holder.btn.setEnabled(bebida.getCantidad()>0);
+        holder.restar.setEnabled(bebida.getCantidad()>0);
+        holder.añadir.setEnabled(bebida.getCantidad()>0);
+        if(bebida.getNombre().toLowerCase(Locale.ROOT).contains("agua")){
+            holder.imgBebida.setImageResource(R.drawable.agua);
+        }else if(bebida.getNombre().toLowerCase(Locale.ROOT).contains("kas")){
+            holder.imgBebida.setImageResource(R.drawable.kas);
+        }else if(bebida.getNombre().toLowerCase(Locale.ROOT).contains("cocacola")){
+            holder.imgBebida.setImageResource(R.drawable.cocacola);
+        }
     }
 
     @Override
