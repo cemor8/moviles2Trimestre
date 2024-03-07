@@ -18,6 +18,7 @@ import modelo.Pedido;
 public class MainActivity extends AppCompatActivity {
     private Data data;
     private TextView textView;
+    private TextView tvEstado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
             String str = "Barra - "+data.getMesaSeleccionada().getSitios().get(0).getNombre();
             this.textView.setText(str);
         }
+        this.tvEstado = findViewById(R.id.estadoPedido);
 
 
 //          Obtengo el menu inferior por el id y le establezco en método para que cambie
@@ -52,16 +54,20 @@ public class MainActivity extends AppCompatActivity {
             if (id == R.id.platos) {
                 selectedFragment = new PlatosFragment();
                 selectedFragment.setArguments(args);
+                this.tvEstado.setText("Pedido : "+data.getPedido().getEstado());
 
             }else if (id == R.id.menusDia){
                 selectedFragment = new MenusFragment();
                 selectedFragment.setArguments(args);
+                this.tvEstado.setText("Pedido : "+data.getPedido().getEstado());
             } else if (id == R.id.bebidas) {
                 selectedFragment = new BebidaFragment();
                 selectedFragment.setArguments(args);
+                this.tvEstado.setText("Pedido : "+data.getPedido().getEstado());
             } else if (id == R.id.pedido) {
                 selectedFragment = new PedidoFragment();
                 selectedFragment.setArguments(args);
+                this.tvEstado.setText("Pedido : "+data.getPedido().getEstado());
             }
 
             if (selectedFragment != null) {

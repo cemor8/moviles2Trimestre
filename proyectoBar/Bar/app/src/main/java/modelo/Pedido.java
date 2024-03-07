@@ -9,13 +9,13 @@ import java.util.ArrayList;
 
 public class Pedido implements Parcelable {
     private String nombre_mesa;
-    private Integer precio;
+    private Double precio;
     private ArrayList<Consumicion> consumiciones;
     private ArrayList<MenuMeter> menus;
     private String estado;
     private int id;
 
-    public Pedido(String nombre_mesa, Integer precio, ArrayList<Consumicion> consumiciones, ArrayList<MenuMeter> menus, String estado, int id) {
+    public Pedido(String nombre_mesa, Double precio, ArrayList<Consumicion> consumiciones, ArrayList<MenuMeter> menus, String estado, int id) {
         this.nombre_mesa = nombre_mesa;
         this.precio = precio;
         this.consumiciones = consumiciones;
@@ -29,7 +29,7 @@ public class Pedido implements Parcelable {
         if (in.readByte() == 0) {
             precio = null;
         } else {
-            precio = in.readInt();
+            precio = in.readDouble();
         }
         estado = in.readString();
         menus = in.createTypedArrayList(MenuMeter.CREATOR);
@@ -53,7 +53,7 @@ public class Pedido implements Parcelable {
         return nombre_mesa;
     }
 
-    public Integer getPrecio() {
+    public Double getPrecio() {
         return precio;
     }
 
@@ -89,7 +89,7 @@ public class Pedido implements Parcelable {
         this.nombre_mesa = nombreMesa;
     }
 
-    public void setPrecio(Integer precio) {
+    public void setPrecio(Double precio) {
         this.precio = precio;
     }
 
@@ -118,11 +118,23 @@ public class Pedido implements Parcelable {
             dest.writeByte((byte) 0);
         } else {
             dest.writeByte((byte) 1);
-            dest.writeInt(precio);
+            dest.writeDouble(precio);
         }
         dest.writeString(estado);
         dest.writeTypedList(menus);
         dest.writeTypedList(consumiciones);
         dest.writeInt(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "nombre_mesa='" + nombre_mesa + '\'' +
+                ", precio=" + precio +
+                ", consumiciones=" + consumiciones +
+                ", menus=" + menus +
+                ", estado='" + estado + '\'' +
+                ", id=" + id +
+                '}';
     }
 }

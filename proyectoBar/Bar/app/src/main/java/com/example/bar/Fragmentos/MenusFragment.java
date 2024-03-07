@@ -1,9 +1,10 @@
 package com.example.bar.Fragmentos;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.service.credentials.BeginGetCredentialOption;
 import android.util.TypedValue;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +23,6 @@ import com.example.bar.adaptadores.BebidasAdapter;
 import com.example.bar.adaptadores.PrimerosAdapter;
 import com.example.bar.adaptadores.SegundosAdapter;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,7 +31,6 @@ import java.util.Optional;
 
 import modelo.Bebida;
 import modelo.ConexionRetrofit;
-import modelo.Consumicion;
 import modelo.Data;
 import modelo.Menu;
 import modelo.MenuMeter;
@@ -135,7 +133,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
     public void recorrer(View view){
         TextView textView = view.findViewById(R.id.nombreMenuDia);
         textView.setText("Menú "+this.data.getMenuDia().getDia());
-        RecyclerView recyclerView = view.findViewById(R.id.contenedorPrimeros);
+        RecyclerView recyclerView = view.findViewById(R.id.contenedorConsumiciones);
         this.recyclerPrimeros = recyclerView;
         RecyclerView recyclerView2 = view.findViewById(R.id.contenedorSegundos);
         this.recyclerSegundos = recyclerView2;
@@ -208,29 +206,79 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
      */
     public void meterMenu(View view){
         if (this.bebidaSeleccionada == null || this.primeroSeleccionado == null || this.segundoSeleccionado == null || cantidad == null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+            builder.setTitle("Faltan datos");
+            builder.setMessage("Asegurese de seleccionar al menos un primero, un segundo y una bebida");
+
+            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
             return;
         }
-        MenuMeter menuMeter = new MenuMeter(data.getMenuDia().getDia(),this.primeroSeleccionado,this.segundoSeleccionado,this.bebidaSeleccionada,cantidad,data.getMenuDia().getPrecio());
+
+        if (this.data.getPedido().getEstado().equalsIgnoreCase("Preparando")){
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+            builder.setTitle("Pedido en preparación");
+            builder.setMessage("El pedido esta en preparación por nuestro cocinero, no es posible modificarlo");
+
+            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return;
+        }
+
+
+        System.out.println("precios y cantidades");
+        System.out.println(cantidad);
+        System.out.println(data.getMenuDia().getPrecio());
+        MenuMeter menuMeter = new MenuMeter(data.getMenuDia().getDia(),this.primeroSeleccionado,this.segundoSeleccionado,this.bebidaSeleccionada,cantidad,data.getMenuDia().getPrecio() * cantidad);
+
+        Optional<MenuMeter> menuOptional = data.getPedido().getMenus().stream().filter(menuMeter1 -> menuMeter1.getPrimero().equals(menuMeter.getPrimero()) &&
+                menuMeter1.getSegundo().equals(menuMeter.getSegundo()) && menuMeter1.getBebida().equals(menuMeter.getBebida())).findAny();
+        if (menuOptional.isPresent()){
+            if (menuOptional.get().getCantidad() + menuMeter.getCantidad() > 15){
+
+                return;
+            }
+
+            menuOptional.get().setCantidad(menuOptional.get().getCantidad() + menuMeter.getCantidad());
+        }else {
+            data.getPedido().getMenus().add(menuMeter);
+
+        }
+        this.data.getPedido().setPrecio(this.data.getPedido().getPrecio() + menuMeter.getPrecio());
+
+        modificarPedido(view);
+    }
+
+    public void modificarPedido(View view){
         Api api = ConexionRetrofit.getConexion().create(Api.class);
-        System.out.println(data.getPedido());
-        System.out.println(menuMeter);
-        Call<ResponseBody> call = api.meterMenu(data.getPedido().getId(),menuMeter);
+        Call<ResponseBody> call = api.modificarPedido(data.getPedido().getId(),data.getPedido());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//                si la respuesta es satisfactoria se cargan los platos de la base de datos
+
                 if (response.isSuccessful()) {
-                    System.out.println(response.body());
-                    Optional<MenuMeter> menuOptional = data.getPedido().getMenus().stream().filter(menuMeter1 -> menuMeter1.getPrimero().equals(menuMeter.getPrimero()) &&
-                                    menuMeter1.getSegundo().equals(menuMeter.getSegundo()) && menuMeter1.getBebida().equals(menuMeter.getBebida())).findAny();
-                    if (menuOptional.isPresent()){
-                        menuOptional.get().setCantidad(menuOptional.get().getCantidad() + menuMeter.getCantidad());
-                    }else {
-                        data.getPedido().getMenus().add(menuMeter);
-                    }
                     restarCantidades(view);
-
-
+                    System.out.println("correcto");
 
                 }else {
                     int statusCode = response.code();
@@ -247,6 +295,8 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
             }
         });
     }
+
+
 
     /**
      * Método que reinicia los datos para pedir un nuevo menú
@@ -424,16 +474,18 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
      */
     public void sumar(View view){
         Integer cantidadMostrada = Integer.parseInt(String.valueOf(tvCantidad.getText()));
-        if ((primeroSeleccionado!=null && cantidadMostrada + 1 == primeroSeleccionado.getCantidad()) ||
-                (segundoSeleccionado!=null && cantidadMostrada + 1 == segundoSeleccionado.getCantidad()) ||
-                (bebidaSeleccionada!=null && cantidadMostrada + 1 == bebidaSeleccionada.getCantidad()) ||
-                (bebidaSeleccionada!=null && segundoSeleccionado!=null && primeroSeleccionado!=null )
-
-        ){
+        System.out.println(primeroSeleccionado.getCantidad());
+        System.out.println(bebidaSeleccionada.getCantidad());
+        System.out.println(segundoSeleccionado.getCantidad());
+        if ((primeroSeleccionado != null && cantidadMostrada + 1 > primeroSeleccionado.getCantidad()) ||
+                (segundoSeleccionado != null && cantidadMostrada + 1 > segundoSeleccionado.getCantidad()) ||
+                (bebidaSeleccionada != null && cantidadMostrada + 1 > bebidaSeleccionada.getCantidad()) ||
+                cantidadMostrada + 1 > 15) {
             return;
         }
+        System.out.println("hola");
         this.cantidad = cantidadMostrada + 1;
-        tvCantidad.setText(String.valueOf(cantidadMostrada));
+        tvCantidad.setText(String.valueOf(this.cantidad));
     }
 
     /**

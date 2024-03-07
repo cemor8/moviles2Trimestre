@@ -7,6 +7,13 @@
         <item name="colorPrimaryDark">@color/fondo</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="CustomAlertDialog" parent="Theme.MaterialComponents.Dialog.Alert">
+        <item name="colorSurface">@color/fondo2</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="colorPrimary">@color/acento</item>
+        <item name="android:textColor">@color/white</item>
+        <!-- Puedes agregar más ítems si es necesario -->
+    </style>
 
     <style name="Theme.Bar" parent="Base.Theme.Bar" />
 </resources>

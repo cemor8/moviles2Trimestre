@@ -34,11 +34,25 @@
         android:id="@+id/nombreMesa"
         android:layout_width="135dp"
         android:layout_height="32dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center|start"
         android:text="TextView"
         android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/estadoPedido"
+        android:layout_width="153dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center|start"
+        android:text="TextView"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

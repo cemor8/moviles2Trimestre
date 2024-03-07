@@ -106,7 +106,7 @@ public class MenuMeterAdapter extends RecyclerView.Adapter<MenuMeterAdapter.Menu
         MenuMeter menuMeter = menusMeter.get(position);
 
         holder.tvNombreMenuMeter.setText("Menú del día");
-        holder.tvPrecioMenuMeter.setText(String.valueOf(menuMeter.getPrecio() * menuMeter.getCantidad()));
+        holder.tvPrecioMenuMeter.setText(String.valueOf(menuMeter.getPrecio()));
         String cantidad = menuMeter.getCantidad()+" unidades";
         holder.cantidadMenuMeter.setText(cantidad);
 

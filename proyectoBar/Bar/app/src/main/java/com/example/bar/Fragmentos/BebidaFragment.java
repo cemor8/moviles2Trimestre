@@ -103,15 +103,26 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
 
     @Override
     public void onItemClick(int position,TextView textView) {
+
+
+        /* Comprobar estado pedido, si se puede deja añadir, si no no */
+
         Integer cantidad = Integer.valueOf(String.valueOf(textView.getText()));
         Bebida bebida = this.data.getListaBebidasRestaurante().get(position);
-        Consumicion consumicion = new Consumicion(bebida.getNombre(), bebida.getPrecio(),cantidad);
+        Consumicion consumicion = new Consumicion(bebida.getNombre(), bebida.getPrecio(),cantidad,"bebida");
 
         Optional<Consumicion> consumicionOptional = this.data.getPedido().getConsumiciones().stream().filter(consumicion1 -> consumicion1.getNombre().equalsIgnoreCase(consumicion.getNombre())).findAny();
         if (consumicionOptional.isPresent()){
+            if (consumicionOptional.get().getCantidad() + consumicion.getCantidad() > 15){
+
+                /* Establecer pop up no se puede mas de 15 por plato*/
+
+                return;
+            }
             consumicionOptional.get().setCantidad(consumicionOptional.get().getCantidad() + consumicion.getCantidad());
         }else {
             this.data.getPedido().getConsumiciones().add(consumicion);
+            this.data.getPedido().setPrecio(this.data.getPedido().getPrecio() + consumicion.getPrecio());
         }
         textView.setText("1");
 
@@ -127,6 +138,7 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
 
                 if (response.isSuccessful()) {
                     bebida.setCantidad(bebida.getCantidad() - cantidad);
+                    modificarPedido();
                     System.out.println(data.getListaPlatosRestaurante());
                 }else {
                     int statusCode = response.code();
@@ -144,13 +156,41 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
         });
     }
 
+    public void modificarPedido(){
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+        Call<ResponseBody> call = api.modificarPedido(data.getPedido().getId(),data.getPedido());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                if (response.isSuccessful()) {
+                    System.out.println("correcto");
+
+                }else {
+                    int statusCode = response.code();
+                    System.out.println(statusCode);
+                    System.out.println("respuesta mal");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                System.out.println("error");
+                System.out.println(t.getMessage());
+            }
+        });
+    }
+
+
+
     @Override
     public void sumar(TextView textView, int position) {
         Integer cantidad = Integer.valueOf(String.valueOf(textView.getText()));
         Bebida bebida = this.data.getListaBebidasRestaurante().get(position);
         if (cantidad.equals(bebida.getCantidad())){
             return;
-        }else if(cantidad == 20){
+        }else if(cantidad == 15){
             return;
         }
         textView.setText(String.valueOf(cantidad+1));

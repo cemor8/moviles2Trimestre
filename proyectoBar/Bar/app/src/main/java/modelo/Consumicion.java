@@ -9,11 +9,13 @@ public class Consumicion implements Parcelable {
     private String nombre;
     private Double precio;
     private Integer cantidad;
+    private String tipo;
 
-    public Consumicion(String nombre, Double precio, Integer cantidad) {
+    public Consumicion(String nombre, Double precio, Integer cantidad, String tipo) {
         this.nombre = nombre;
         this.precio = precio;
         this.cantidad = cantidad;
+        this.tipo = tipo;
     }
 
     protected Consumicion(Parcel in) {
@@ -28,6 +30,7 @@ public class Consumicion implements Parcelable {
         } else {
             cantidad = in.readInt();
         }
+        tipo = in.readString();
     }
 
     public static final Creator<Consumicion> CREATOR = new Creator<Consumicion>() {
@@ -66,6 +69,14 @@ public class Consumicion implements Parcelable {
         return cantidad;
     }
 
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -86,5 +97,6 @@ public class Consumicion implements Parcelable {
             dest.writeByte((byte) 1);
             dest.writeInt(cantidad);
         }
+        dest.writeString(tipo);
     }
 }

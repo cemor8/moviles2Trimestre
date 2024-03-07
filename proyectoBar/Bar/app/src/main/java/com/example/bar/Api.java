@@ -43,11 +43,11 @@ public interface Api {
     Call<ResponseBody> restarPlatos(@Path("nombre") String nombrePlato, @Body RequestBody cantidad);
     @PUT("/api/restarBebida/{nombre}")
     Call<ResponseBody> restarBebida(@Path("nombre") String nombreBebida, @Body RequestBody cantidad);
+    @PUT("/api/sumarPlatos/{nombre}")
+    Call<ResponseBody> sumarPlatos(@Path("nombre") String nombrePlato, @Body RequestBody cantidad);
+    @PUT("/api/sumarBebida/{nombre}")
+    Call<ResponseBody> sumarBebida(@Path("nombre") String nombreBebida, @Body RequestBody cantidad);
     @PUT("/api/ocuparReserva/{nombreMesa}")
     Call<ResponseBody> ocuparReserva(@Path("nombreMesa") String nombreMesa);
-    @PUT("/api/meterMenu/{id}")
-    Call<ResponseBody> meterMenu(@Path("id") int id,@Body MenuMeter menu);
-    @POST("/api/meterConsumicion/{id}")
-    Call<ResponseBody> meterConsumicion(@Path("id") int id,@Body Consumicion consumicion);
 
 }

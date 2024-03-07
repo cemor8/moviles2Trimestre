@@ -1,12 +1,18 @@
 package com.example.bar.Fragmentos;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.TypedValue;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -116,17 +122,54 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
 
     @Override
     public void onItemClick(int position, TextView textView) {
+
+        if (this.data.getPedido().getEstado().equalsIgnoreCase("Preparando")){
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+            builder.setTitle("Pedido en preparación");
+            builder.setMessage("El pedido esta en preparación por nuestro cocinero, no es posible modificarlo");
+
+            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return;
+        }
+
+        /* Comprobar estado pedido, si se puede deja añadir, si no no */
+
+
+
+
         Integer cantidad = Integer.valueOf(String.valueOf(textView.getText()));
         Plato plato = this.data.getListaPlatosRestaurante().get(position);
-        Consumicion consumicion = new Consumicion(plato.getNombre(), plato.getPrecio(),cantidad);
+        Consumicion consumicion = new Consumicion(plato.getNombre(), plato.getPrecio(),cantidad,"plato");
         Optional<Consumicion> consumicionOptional = this.data.getPedido().getConsumiciones().stream().filter(consumicion1 -> consumicion1.getNombre().equalsIgnoreCase(consumicion.getNombre())).findAny();
         if (consumicionOptional.isPresent()){
+            if (consumicionOptional.get().getCantidad() + consumicion.getCantidad() > 15){
+
+                /* Establecer pop up no se puede mas de 15 por plato*/
+
+                return;
+            }
            consumicionOptional.get().setCantidad(consumicionOptional.get().getCantidad() + consumicion.getCantidad());
         }else {
             this.data.getPedido().getConsumiciones().add(consumicion);
         }
         textView.setText("1");
 
+        this.data.getPedido().setPrecio(this.data.getPedido().getPrecio() + consumicion.getPrecio() * cantidad);
 
 
         Api api = ConexionRetrofit.getConexion().create(Api.class);
@@ -164,7 +207,7 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
         Plato plato = this.data.getListaPlatosRestaurante().get(position);
         if (cantidad.equals(plato.getCantidad())){
             return;
-        }else if(cantidad == 20){
+        }else if(cantidad == 15){
             return;
         }
         textView.setText(String.valueOf(cantidad+1));

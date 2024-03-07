@@ -258,6 +258,79 @@ app.put('/api/restarBebida/:nombre', async (req, res) => {
     }
 });
 
+app.put('/api/sumarPlatos/:nombre', async (req, res) => {
+    let nombre = req.params.nombre
+    let cantidadARestar = req.body.cantidad
+    console.log(nombre)
+    console.log(cantidadARestar)
+    try {
+        await menusDia.find({ $or: [{ "primeros.nombre": nombre }, { "segundos.nombre": nombre }] })
+            .then(docs => {
+                docs.forEach(doc => {
+                    doc.primeros.forEach(plato => {
+                        if (plato.nombre === nombre) {
+                            plato.cantidad += cantidadARestar;
+                        }
+                    });
+                    doc.segundos.forEach(plato => {
+                        if (plato.nombre === nombre) {
+                            plato.cantidad += cantidadARestar;
+                        }
+                    });
+                    doc.save();
+                });
+            })
+
+        await plato.find({ "nombre": nombre })
+            .then(docs => {
+                docs.forEach(doc => {
+
+                    doc.cantidad -= cantidadARestar;
+                    doc.save();
+                });
+            });
+        res.status(200).json({ message: "Cantidad actualizada correctamente" });
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({ message: "Error al actualizar la cantidad del plato", error: error });
+    }
+});
+
+
+app.put('/api/sumarBebida/:nombre', async (req, res) => {
+    let nombre = req.params.nombre
+    let cantidadARestar = req.body.cantidad
+    console.log(nombre)
+    console.log(cantidadARestar)
+    try {
+        await menusDia.find({ "bebidas.nombre" : nombre})
+            .then(docs => {
+                docs.forEach(doc => {
+                    doc.bebidas.forEach(bebida => {
+                        if (bebida.nombre === nombre) {
+                            bebida.cantidad += cantidadARestar;
+                        }
+                    });
+                    doc.save();
+                });
+            })
+
+        await bebida.find({ "nombre": nombre })
+            .then(docs => {
+                docs.forEach(doc => {
+                    doc.cantidad += cantidadARestar;
+                    doc.save();
+                });
+            });
+        res.status(200).json({ message: "Cantidad actualizada correctamente" });
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({ message: "Error al actualizar la cantidad de la bebida", error: error });
+    }
+});
+
+
+
 app.put('/api/ocuparReserva/:nombreMesa', async (req, res) => {
     let nombreMesa = req.params.nombreMesa
     
@@ -273,34 +346,6 @@ app.put('/api/ocuparReserva/:nombreMesa', async (req, res) => {
     } catch (error) {
         console.log(error.message)
         res.status(500).json({ message: "Error al actualizar la reserva", error: error });
-    }
-});
-
-app.put('/api/meterMenu/:id', async (req, res) => {
-    let id = req.params.id
-    try {
-        let test = await pedido.findOneAndUpdate(
-        { id: id },
-        { $push: { menus: req.body } });
-        res.status(200).json({ message: "Menu añadido correctamente" });
-    } catch (error) {
-        console.log(error.message)
-        res.status(500).json({ message: "Error al añadir el menu", error: error });
-    }
-});
-
-app.put('/api/meterConsumicion/:id', async (req, res) => {
-    let id = req.params.id
-    const { consumicion } = req.body;
-    try {
-            await pedido.findOneAndUpdate(
-            { id: id },
-            { $push: { consumiciones: consumicion } }
-        );
-        res.status(200).json({ message: "Consumicion Añadida Correctamente" });
-    } catch (error) {
-        console.log(error.message)
-        res.status(500).json({ message: "Error al añadir la consumicion", error: error });
     }
 });
 
@@ -326,8 +371,9 @@ app.post('/api/pedidos', async (req, res) => {
             id: nextId,
             nombre_mesa: "",
             consumiciones: [],
-            precio: 0,
-            estador: "creado",
+            menus: [],
+            estado: "Libre",
+            precio: 0
         });
         await nuevoPedido.save();
         res.json(nuevoPedido);
