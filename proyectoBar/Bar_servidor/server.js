@@ -20,7 +20,7 @@ const Schema = mongoose.Schema;
 const modelo = mongoose.model;
 const esquemaSitio = new Schema({
     nombre: String,
-    ocupada: Boolean
+    ocupado: Boolean
 }, {
     versionKey: false
 });
@@ -72,7 +72,7 @@ const esquemaPedidos = new Schema({
     id: Number,
     nombre_mesa: String,
     consumiciones: Array,
-    menus : Array,
+    menus: Array,
     estado: String,
     precio: Number
 }, {
@@ -83,7 +83,7 @@ const esquemaFactura = new Schema({
     id: Number,
     nombre_mesa: String,
     consumiciones: Array,
-    estado: String,
+    menus: Array,
     precio: Number
 }, {
     versionKey: false
@@ -96,8 +96,8 @@ const contador = mongoose.model('contadores', new mongoose.Schema({
 const esquemaReserva = new Schema({
     dni: String,
     mesas: [esquemaMesa],
-    atendido : String,
-    creada : Date
+    atendido: String,
+    creada: Date
 })
 
 
@@ -155,7 +155,7 @@ app.get('/api/pedidos', async (req, res) => {
 });
 app.get('/api/pedido/:id', async (req, res) => {
     try {
-        let pedidoEncontrado = await pedido.findOne({id : req.params.id});
+        let pedidoEncontrado = await pedido.findOne({ id: req.params.id });
         res.status(200).json(pedidoEncontrado);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -164,7 +164,9 @@ app.get('/api/pedido/:id', async (req, res) => {
 //#endregion get
 
 //#region put
-
+/*
+Método que actualiza el pedido con los datos pasados
+*/
 app.put('/api/pedido/:id', async (req, res) => {
     try {
         console.log(req.body);
@@ -176,17 +178,10 @@ app.put('/api/pedido/:id', async (req, res) => {
     }
 });
 
-app.put('/api/mesa:nombre_mesa', async (req, res) => {
-    try {
-        console.log(req.body);
-        await mesa.findOneAndUpdate({ titulo: req.params.nombre_mesa }, req.body);
-        res.sendStatus(200);
-    } catch (err) {
-        console.log(err.message);
-        res.status(500).json({ message: err.message });
-    }
-});
-
+/*
+Método que se encarga de restar la cantidad de platos de la base de datos
+cuyo nombre sea igual al establecido
+*/
 app.put('/api/restarPlatos/:nombre', async (req, res) => {
     let nombre = req.params.nombre
     let cantidadARestar = req.body.cantidad
@@ -232,7 +227,7 @@ app.put('/api/restarBebida/:nombre', async (req, res) => {
     console.log(nombre)
     console.log(cantidadARestar)
     try {
-        await menusDia.find({ "bebidas.nombre" : nombre})
+        await menusDia.find({ "bebidas.nombre": nombre })
             .then(docs => {
                 docs.forEach(doc => {
                     doc.bebidas.forEach(bebida => {
@@ -303,7 +298,7 @@ app.put('/api/sumarBebida/:nombre', async (req, res) => {
     console.log(nombre)
     console.log(cantidadARestar)
     try {
-        await menusDia.find({ "bebidas.nombre" : nombre})
+        await menusDia.find({ "bebidas.nombre": nombre })
             .then(docs => {
                 docs.forEach(doc => {
                     doc.bebidas.forEach(bebida => {
@@ -330,21 +325,63 @@ app.put('/api/sumarBebida/:nombre', async (req, res) => {
 });
 
 
-
+/*
+Método que se encarga de ocupar la reserva en una base de datos
+*/
 app.put('/api/ocuparReserva/:nombreMesa', async (req, res) => {
     let nombreMesa = req.params.nombreMesa
-    
+
     try {
-            await reserva.findOneAndUpdate(
-                { $or: [
+        let resultado = await reserva.findOneAndUpdate(
+            {
+                $or: [
                     { "mesas.nombre_mesa": nombreMesa },
                     { "mesas.sitios.nombre": nombreMesa }
-                ]},
-                { $set: { atendido: true } }
+                ]
+            },
+            { $set: { atendido: true } }
         );
+        
+        if (!resultado) { // Si no se encuentra la reserva, resultado será null
+            console.log("No se encontró la reserva especificada.");
+            return res.status(500).json({ message: "No se encontró la reserva especificada." });
+        }
+        
         res.status(200).json({ message: "Reserva actualizada correctamente" });
     } catch (error) {
         console.log(error.message)
+        res.status(500).json({ message: "Error al actualizar la reserva", error: error });
+    }
+});
+
+
+/*
+Método que se encarga de liberar una mesa despues de que el cliente acabe
+*/
+app.put('/api/liberar/:nombreMesa', async (req, res) => {
+    let nombreMesa = req.params.nombreMesa
+    try {
+        let resultadoSitio = await mesa.findOneAndUpdate(
+            { "sitios.nombre": nombreMesa },
+            { $set: { "sitios.$.ocupado": false } }
+        );
+
+        if (resultadoSitio) {
+            return res.status(200).json({ message: "Sitio liberado correctamente" });
+        }
+        let resultadoMesa = await mesa.findOneAndUpdate(
+            { nombre_mesa: nombreMesa },
+            { $set: { ocupada: false } }
+        );
+
+        if (resultadoMesa) {
+            return res.status(200).json({ message: "Mesa liberada correctamente" });
+        }
+
+        
+        res.status(404).json({ message: "No se encontró la mesa o sitio con el nombre proporcionado." });
+    } catch (error) {
+        console.log(error.message);
         res.status(500).json({ message: "Error al actualizar la reserva", error: error });
     }
 });
@@ -372,7 +409,7 @@ app.post('/api/pedidos', async (req, res) => {
             nombre_mesa: "",
             consumiciones: [],
             menus: [],
-            estado: "Libre",
+            estado: "Servido",
             precio: 0
         });
         await nuevoPedido.save();
@@ -389,17 +426,40 @@ app.post('/api/pedidos', async (req, res) => {
 //#endregion post
 
 //#region delete
-
-app.delete('/api/reservas/:dni', async (req, res) => {
+/*
+Método que se encarga de eliminar la reserva de la base de datos
+*/
+app.delete('/api/reservas/:nombreMesa', async (req, res) => {
     try {
-        await reserva.findOneAndDelete({ dni: req.params.dni });
-        console.log("bien");
+        await reserva.findOneAndDelete(
+            {
+                $or: [
+                    { "mesas.nombre_mesa": req.params.nombreMesa },
+                    { "mesas.sitios.nombre": req.params.nombreMesa }
+                ]
+            },
+        );
         res.sendStatus(200);
     } catch (err) {
         console.log(err.message)
         res.status(500).json({ message: err.message });
     }
 });
+/*
+Método que elimina un pedido de la base de datos
+*/
+app.delete('/api/pedido/:id', async (req, res) => {
+    try {
+        console.log("eliminandoPedido")
+        await pedido.findOneAndDelete({ id: req.params.id });
+        res.sendStatus(200);
+    } catch (err) {
+        console.log(err.message)
+        res.status(500).json({ message: err.message });
+    }
+});
+
+
 
 //#endregion delete
 

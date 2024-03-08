@@ -2,6 +2,7 @@ package com.example.bar.Fragmentos;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
@@ -15,6 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bar.Api;
+import com.example.bar.ControllerLogin;
+import com.example.bar.MainActivity;
 import com.example.bar.Margen;
 import com.example.bar.R;
 import com.example.bar.adaptadores.ConsumicionAdapter;
@@ -52,7 +55,7 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
         this.recyclerViewCons = view.findViewById(R.id.contenedorConsumiciones);
         this.btnPagar = view.findViewById(R.id.btnPagar);
         btnPagar.setOnClickListener(this::pagarPedido);
-        btnPagar.setEnabled(data.getPedido().getEstado().equalsIgnoreCase("Servido"));
+
 
         if(getArguments() != null){
             this.data = getArguments().getParcelable("data");
@@ -108,9 +111,8 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
     }
 
     public void pagarPedido(View view){
-
         this.data.getPedido().setEstado("Pagado");
-        modificarPedido();
+        crearFactura();
 
     }
 
@@ -204,6 +206,7 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
                         data.setPedido(item);
                         System.out.println(data.getPedido());
                         button.setEnabled(data.getPedido().getEstado().equalsIgnoreCase("libre"));
+                        btnPagar.setEnabled(data.getPedido().getEstado().equalsIgnoreCase("Servido"));
                         recorrer(view);
                         recorrerMenusMeter(view);
                     }
@@ -368,4 +371,156 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
             }
         });
     }
+
+    /**
+     * Método que se encarga de crear una factura en la base de datos con los datos del pedido
+     */
+    public void crearFactura(){
+
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+
+        Call<ResponseBody> call = api.crearFactura(data.getPedido());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                if (response.isSuccessful()) {
+                    System.out.println("factura creada correctamente");
+                    eliminarPedido();
+
+                }else {
+                    int statusCode = response.code();
+                    System.out.println(statusCode);
+                    System.out.println("respuesta mal");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                System.out.println("error");
+                System.out.println(t.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Método que se encarga de eliminar el pedido de la base de datos
+     */
+    public void eliminarPedido(){
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+
+        Call<ResponseBody> call = api.eliminarPedido(data.getPedido().getId());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                if (response.isSuccessful()) {
+                    System.out.println("pedido eliminado correctamente");
+                    eliminarReserva();
+                }else {
+                    int statusCode = response.code();
+                    System.out.println(statusCode);
+                    System.out.println("respuesta mal");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                System.out.println("error");
+                System.out.println(t.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Método que se encarga de eliminar la reserva de la base de datos
+     */
+    public void eliminarReserva(){
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+        String nombre = "";
+        if (data.getMesaSeleccionada().getSitios().isEmpty()){
+            nombre = data.getMesaSeleccionada().getNombre();
+        }else{
+            nombre = data.getMesaSeleccionada().getSitios().get(0).getNombre();
+        }
+        Call<ResponseBody> call = api.eliminarReserva(nombre);
+        String finalNombre = nombre;
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                if (response.isSuccessful()) {
+                    System.out.println("reserva eliminada correctamente");
+                    liberarMesa(finalNombre);
+                }else {
+                    int statusCode = response.code();
+                    System.out.println(statusCode);
+                    System.out.println("respuesta mal");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                System.out.println("error");
+                System.out.println(t.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Método que se encarga de liberar la mesa en la base de datos
+     */
+    public void liberarMesa(String nombre){
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+
+        Call<ResponseBody> call = api.liberarMesa(nombre);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                if (response.isSuccessful()) {
+                    System.out.println("mesa liberada correctamente");
+                    irLogin();
+                }else {
+                    int statusCode = response.code();
+                    System.out.println(statusCode);
+                    System.out.println("respuesta mal");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                System.out.println("error");
+                System.out.println(t.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Método que se encarga de volver al login
+     */
+    public void irLogin(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+        builder.setTitle("Pago completado!");
+        builder.setMessage("Gracias por acudir a nuestro restaurante, hasta pronto!");
+
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        Intent intent = new Intent(getContext(), ControllerLogin.class);
+        startActivity(intent);
+    }
+
 }
