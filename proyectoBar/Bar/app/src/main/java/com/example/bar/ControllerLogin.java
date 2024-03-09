@@ -1,7 +1,10 @@
 package com.example.bar;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.TextView;
 
@@ -61,7 +64,7 @@ public class ControllerLogin extends AppCompatActivity {
                             && (mesa.getNombre().equalsIgnoreCase(nombreMesa) || mesa.getSitios().stream().anyMatch(sitio -> sitio.getNombre().equalsIgnoreCase(nombreMesa)))).findAny();
 
                     if (!mesaSeleccionada.isPresent()){
-                        System.out.println("Mesa no encontrada");
+                        alertError();
                         return;
                     }
                     if (mesaSeleccionada.get().getUbicacion().equalsIgnoreCase("barra")){
@@ -90,6 +93,7 @@ public class ControllerLogin extends AppCompatActivity {
                     int statusCode = response.code();
                     System.out.println(statusCode);
                     System.out.println("respuesta mal");
+                    alertError();
 
                 }
             }
@@ -98,6 +102,7 @@ public class ControllerLogin extends AppCompatActivity {
             public void onFailure(Call<ArrayList<Mesa>> call, Throwable t) {
                 System.out.println("error");
                 System.out.println(t.getMessage());
+                alertError();
             }
         });
 
@@ -144,6 +149,7 @@ public class ControllerLogin extends AppCompatActivity {
                     int statusCode = response.code();
                     System.out.println(statusCode);
                     System.out.println("respuesta mal");
+                    alertError();
 
                 }
             }
@@ -152,6 +158,7 @@ public class ControllerLogin extends AppCompatActivity {
             public void onFailure(Call<Pedido> call, Throwable t) {
                 System.out.println("error");
                 System.out.println(t.getMessage());
+                alertError();
             }
         });
 
@@ -175,6 +182,7 @@ public class ControllerLogin extends AppCompatActivity {
                     int statusCode = response.code();
                     System.out.println(statusCode);
                     System.out.println("respuesta mal");
+                    alertError();
 
                 }
             }
@@ -183,6 +191,7 @@ public class ControllerLogin extends AppCompatActivity {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 System.out.println("error");
                 System.out.println(t.getMessage());
+                alertError();
             }
         });
     }
@@ -200,6 +209,7 @@ public class ControllerLogin extends AppCompatActivity {
                     int statusCode = response.code();
                     System.out.println(statusCode);
                     System.out.println("respuesta mal");
+                    alertError();
 
                 }
             }
@@ -208,7 +218,22 @@ public class ControllerLogin extends AppCompatActivity {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 System.out.println("error");
                 System.out.println(t.getMessage());
+                alertError();
             }
         });
+    }
+    public void alertError(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.CustomAlertDialog));
+        builder.setTitle("Error");
+        builder.setMessage("Asegurese que la mesa introducida es correcta y tiene una reserva");
+
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
