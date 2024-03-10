@@ -409,7 +409,7 @@ app.post('/api/pedidos', async (req, res) => {
             nombre_mesa: "",
             consumiciones: [],
             menus: [],
-            estado: "Servido",
+            estado: "libre",
             precio: 0
         });
         await nuevoPedido.save();

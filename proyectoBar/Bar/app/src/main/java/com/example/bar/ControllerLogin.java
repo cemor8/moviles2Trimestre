@@ -60,7 +60,7 @@ public class ControllerLogin extends AppCompatActivity {
                     ArrayList<Mesa> items = (ArrayList<Mesa>) response.body();
                     System.out.println(items);
                     String nombreMesa = String.valueOf(textView.getText());
-                    Optional<Mesa> mesaSeleccionada = items.stream().filter(mesa -> !mesa.getOcupada()
+                    Optional<Mesa> mesaSeleccionada = items.stream().filter(mesa -> (mesa.getOcupada() ||  mesa.getSitios().stream().anyMatch(sitio -> sitio.getNombre().equalsIgnoreCase(nombreMesa) && sitio.getOcupado()))
                             && (mesa.getNombre().equalsIgnoreCase(nombreMesa) || mesa.getSitios().stream().anyMatch(sitio -> sitio.getNombre().equalsIgnoreCase(nombreMesa)))).findAny();
 
                     if (!mesaSeleccionada.isPresent()){

@@ -15,7 +15,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import modelo.Data;
 import modelo.Pedido;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PedidoFragment.CambiarFragmentoInterfaz{
     private Data data;
     private TextView textView;
     private TextView tvEstado;
@@ -84,4 +84,10 @@ public class MainActivity extends AppCompatActivity {
             bottomNavigationView.setSelectedItemId(R.id.platos);
         }
     }
+    @Override
+    public void cambiarFragmento(int menuItemId) {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.menu);
+        bottomNavigationView.setSelectedItemId(menuItemId);
+    }
+
 }

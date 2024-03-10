@@ -107,6 +107,9 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
         dialog.show();
         this.button.setEnabled(false);
 
+        if(getActivity() instanceof CambiarFragmentoInterfaz) {
+            ((CambiarFragmentoInterfaz)getActivity()).cambiarFragmento(R.id.platos);
+        }
 
     }
 
@@ -116,20 +119,58 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
 
     }
 
+    public interface CambiarFragmentoInterfaz {
+        void cambiarFragmento(int menuItemId);
+    }
 
 
 
     @Override
     public void onItemClickConsumicion(int position) {
-        Consumicion consumicion = this.data.getPedido().getConsumiciones().get(position);
-        this.data.getPedido().getConsumiciones().remove(position);
+        if (data.getPedido().getEstado().equalsIgnoreCase("Preparando")){
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+            builder.setTitle("Pedido en preparación");
+            builder.setMessage("El pedido esta en preparación por nuestro cocinero, no es posible modificarlo");
+
+            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return;
+        }else if(data.getPedido().getEstado().equalsIgnoreCase("servido")){
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+            builder.setTitle("Pedido servido");
+            builder.setMessage("No es posible modificar el pedido una vez está servido");
+
+            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return;
+        }
+        Consumicion consumicion = data.getPedido().getConsumiciones().get(position);
+        data.getPedido().getConsumiciones().remove(position);
         ConsumicionAdapter adapter = (ConsumicionAdapter) recyclerViewCons.getAdapter();
         adapter.notifyItemRemoved(position);
         adapter.notifyItemRangeChanged(position, adapter.getItemCount());
-
+        calcularPrecio();
         sumarConsumicion(consumicion);
 
     }
+
+
+
+
 
     /**
      * Método que elimina del pedido el menú seleccionado
@@ -137,13 +178,48 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
      */
     @Override
     public void eliminar(int position) {
-        MenuMeter menuMeter = this.data.getPedido().getMenus().get(position);
-        this.data.getPedido().getMenus().remove(position);
+        if (data.getPedido().getEstado().equalsIgnoreCase("Preparando")){
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+            builder.setTitle("Pedido en preparación");
+            builder.setMessage("El pedido esta en preparación por nuestro cocinero, no es posible modificarlo");
+
+            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return;
+        }else if(data.getPedido().getEstado().equalsIgnoreCase("servido")){
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+            builder.setTitle("Pedido servido");
+            builder.setMessage("No es posible modificar el pedido una vez está servido");
+
+            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return;
+        }
+
+
+
+        MenuMeter menuMeter = data.getPedido().getMenus().get(position);
+        data.getPedido().getMenus().remove(position);
         MenuMeterAdapter adapter = (MenuMeterAdapter) recyclerViewMen.getAdapter();
         adapter.notifyItemRemoved(position);
         adapter.notifyItemRangeChanged(position, adapter.getItemCount());
-
+        calcularPrecio();
         sumarMenu(menuMeter);
+
     }
 
     /**
@@ -521,6 +597,23 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
         dialog.show();
         Intent intent = new Intent(getContext(), ControllerLogin.class);
         startActivity(intent);
+    }
+    public void calcularPrecio() {
+        this.data.getPedido().setPrecio(0.0);
+        double cantidadLugar = 0;
+        for (Consumicion consumicion : this.data.getPedido().getConsumiciones()){
+            this.data.getPedido().setPrecio(consumicion.getPrecio() * consumicion.getCantidad() + this.data.getPedido().getPrecio());
+        }
+        for (MenuMeter menuMeter : this.data.getPedido().getMenus()){
+            this.data.getPedido().setPrecio(menuMeter.getPrecio() * menuMeter.getCantidad() + this.data.getPedido().getPrecio());
+        }
+        if (data.getMesaSeleccionada().getUbicacion().equalsIgnoreCase("barra")){
+            cantidadLugar = -1;
+        }else if(data.getMesaSeleccionada().getUbicacion().equalsIgnoreCase("terraza")){
+            cantidadLugar = 2;
+        }
+        if (this.data.getPedido().getPrecio()>0)
+        this.data.getPedido().setPrecio(this.data.getPedido().getPrecio() + cantidadLugar);
     }
 
 }

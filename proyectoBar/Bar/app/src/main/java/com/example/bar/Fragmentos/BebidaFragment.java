@@ -21,6 +21,8 @@ import com.example.bar.adaptadores.BebidasAdapter;
 import com.example.bar.adaptadores.ListaBebidasAdapter;
 import com.example.bar.adaptadores.PlatosAdapter;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,6 +34,7 @@ import modelo.ConexionRetrofit;
 import modelo.Consumicion;
 import modelo.Data;
 import modelo.Menu;
+import modelo.MenuMeter;
 import modelo.Pedido;
 import modelo.Plato;
 import okhttp3.MediaType;
@@ -117,6 +120,25 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
         recyclerView.addItemDecoration(new Margen(espacio,false));
     }
 
+    public void calcularPrecio() {
+        this.data.getPedido().setPrecio(0.0);
+        double cantidadLugar = 0;
+        for (Consumicion consumicion : this.data.getPedido().getConsumiciones()){
+            this.data.getPedido().setPrecio(consumicion.getPrecio() * consumicion.getCantidad() + this.data.getPedido().getPrecio());
+        }
+        for (MenuMeter menuMeter : this.data.getPedido().getMenus()){
+            this.data.getPedido().setPrecio(menuMeter.getPrecio() * menuMeter.getCantidad() + this.data.getPedido().getPrecio());
+        }
+        if (data.getMesaSeleccionada().getUbicacion().equalsIgnoreCase("barra")){
+            cantidadLugar = -1;
+        }else if(data.getMesaSeleccionada().getUbicacion().equalsIgnoreCase("terraza")){
+            cantidadLugar = 2;
+        }
+        if (this.data.getPedido().getPrecio()>0){
+            this.data.getPedido().setPrecio(this.data.getPedido().getPrecio() + cantidadLugar);
+        }
+    }
+
     /**
      * Método que se encarga de meter la bebida en la lista de consumiciones del pedido
      * @param position
@@ -125,12 +147,25 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
     @Override
     public void onItemClick(int position,TextView textView) {
 
-
-
         if (this.data.getPedido().getEstado().equalsIgnoreCase("Preparando")){
             AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
             builder.setTitle("Pedido en preparación");
             builder.setMessage("El pedido esta en preparación por nuestro cocinero, no es posible modificarlo");
+
+            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return;
+        }else if(this.data.getPedido().getEstado().equalsIgnoreCase("servido")){
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+            builder.setTitle("Pedido servido");
+            builder.setMessage("No es posible modificar el pedido una vez está servido");
 
             builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                 @Override
@@ -152,15 +187,22 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
         if (consumicionOptional.isPresent()){
             if (consumicionOptional.get().getCantidad() + consumicion.getCantidad() > 15){
 
-                /* Establecer pop up no se puede mas de 15 por plato*/
+                popUpMax();
 
                 return;
             }
             consumicionOptional.get().setCantidad(consumicionOptional.get().getCantidad() + consumicion.getCantidad());
         }else {
             this.data.getPedido().getConsumiciones().add(consumicion);
-            this.data.getPedido().setPrecio(this.data.getPedido().getPrecio() + consumicion.getPrecio());
+
         }
+        this.calcularPrecio();
+
+
+        BigDecimal bd = new BigDecimal(this.data.getPedido().getPrecio()).setScale(2, RoundingMode.HALF_UP);
+        double valorRedondeado = bd.doubleValue();
+        this.data.getPedido().setPrecio(valorRedondeado);
+
         textView.setText("1");
 
 
@@ -197,6 +239,7 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
                 System.out.println(t.getMessage());
             }
         });
+        productoMeter();
     }
 
     /**
@@ -299,4 +342,39 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
             }
         });
     }
+
+    /**
+     * Método que se encarga de indicar el máximo de consumiciones por pedido
+     */
+    public void popUpMax() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+        builder.setTitle("Cantidad máxima");
+        builder.setMessage("Solo se permite como máximo 15 unidades por consumición");
+
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    public void productoMeter(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+        builder.setTitle("Artículo añadido");
+        builder.setMessage("Artículo añadido al pedido");
+
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 }

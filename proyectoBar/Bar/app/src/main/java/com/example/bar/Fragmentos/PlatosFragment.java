@@ -24,13 +24,17 @@ import com.example.bar.R;
 import com.example.bar.adaptadores.PlatosAdapter;
 import com.example.bar.adaptadores.PrimerosAdapter;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Optional;
 
 import modelo.ConexionRetrofit;
 import modelo.Consumicion;
 import modelo.Data;
+import modelo.MenuMeter;
 import modelo.Mesa;
+import modelo.Pedido;
 import modelo.Plato;
 import modelo.Sitio;
 import okhttp3.MediaType;
@@ -55,6 +59,7 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
         if(getArguments() != null){
             this.data = getArguments().getParcelable("data");
             System.out.println("comunicacion correcta");
+            this.recibirPedido(view);
             this.inicializar(view);
         }
 
@@ -82,9 +87,6 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
                     if (items!=null){
                         data.getListaPlatosRestaurante().addAll(items);
                     }
-
-
-
                     recorrer(view);
 
 
@@ -121,6 +123,22 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
         );
         recyclerView.addItemDecoration(new Margen(espacio,false));
     }
+    public void calcularPrecio() {
+        this.data.getPedido().setPrecio(0.0);
+        double cantidadLugar = 0;
+        for (Consumicion consumicion : this.data.getPedido().getConsumiciones()){
+            this.data.getPedido().setPrecio((consumicion.getPrecio() * consumicion.getCantidad()) + this.data.getPedido().getPrecio());
+        }
+        for (MenuMeter menuMeter : this.data.getPedido().getMenus()){
+            this.data.getPedido().setPrecio((menuMeter.getPrecio() * menuMeter.getCantidad()) + this.data.getPedido().getPrecio());
+        }
+        if (data.getMesaSeleccionada().getUbicacion().equalsIgnoreCase("barra")){
+            cantidadLugar = -1;
+        }else if(data.getMesaSeleccionada().getUbicacion().equalsIgnoreCase("terraza")){
+            cantidadLugar = 2;
+        }
+        this.data.getPedido().setPrecio(this.data.getPedido().getPrecio() + cantidadLugar);
+    }
 
     /**
      * Método que se encarga de añadir un plato a la lista de consumciones del pedido
@@ -145,9 +163,22 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
             AlertDialog dialog = builder.create();
             dialog.show();
             return;
-        }
+        }else if(this.data.getPedido().getEstado().equalsIgnoreCase("servido")){
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+            builder.setTitle("Pedido servido");
+            builder.setMessage("No es posible modificar el pedido una vez está servido");
 
-        /* Comprobar estado pedido, si se puede deja añadir, si no no */
+            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return;
+        }
 
 
         /* Obtener cantidad, crear consumicion, si ya esta ese plato añadido, se añade la cantidad a la consumicion de la lista, si no
@@ -160,35 +191,22 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
         if (consumicionOptional.isPresent()){
             if (consumicionOptional.get().getCantidad() + consumicion.getCantidad() > 15){
 
-                /* Establecer pop up no se puede mas de 15 por plato*/
-
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
-                builder.setTitle("Cantidad máxima alcanzada");
-                builder.setMessage("No se pueden pedir mas de 15 unidades del mismo plato o menú, añada otro");
-
-                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
-                return;
+                popUpMax();
             }
            consumicionOptional.get().setCantidad(consumicionOptional.get().getCantidad() + consumicion.getCantidad());
         }else {
             this.data.getPedido().getConsumiciones().add(consumicion);
         }
+
+        this.calcularPrecio();
+
+
+        BigDecimal bd = new BigDecimal(this.data.getPedido().getPrecio()).setScale(2, RoundingMode.HALF_UP);
+        double valorRedondeado = bd.doubleValue();
+        this.data.getPedido().setPrecio(valorRedondeado);
         textView.setText("1");
 
 
-
-
-
-        this.data.getPedido().setPrecio(this.data.getPedido().getPrecio() + consumicion.getPrecio() * cantidad);
 
 
         Api api = ConexionRetrofit.getConexion().create(Api.class);
@@ -220,6 +238,7 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
                 System.out.println(t.getMessage());
             }
         });
+        productoMeter();
 
 
     }
@@ -286,5 +305,70 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
                 System.out.println(t.getMessage());
             }
         });
+    }
+    /**
+     * Método que se encarga de indicar el máximo de consumiciones por pedido
+     */
+    public void popUpMax() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+        builder.setTitle("Cantidad máxima");
+        builder.setMessage("Solo se permite como máximo 15 unidades por consumición");
+
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    /**
+     * Método que recibe el pedido de la base de datos
+     * @param view
+     */
+    public void recibirPedido(View view){
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+        Call<Pedido> call = api.getpedido(data.getPedido().getId());
+        call.enqueue(new Callback<Pedido>() {
+            @Override
+            public void onResponse(Call<Pedido> call, Response<Pedido> response) {
+//                si la respuesta es satisfactoria se cargan los platos de la base de datos
+                if (response.isSuccessful()) {
+                    System.out.println(response.body());
+                    Pedido item = (Pedido) response.body();
+                    if (item!=null){
+                        data.setPedido(item);
+                    }
+                }else {
+                    int statusCode = response.code();
+                    System.out.println(statusCode);
+                    System.out.println("respuesta mal");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Pedido> call, Throwable t) {
+                System.out.println("error");
+                System.out.println(t.getMessage());
+            }
+        });
+    }
+    public void productoMeter(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+        builder.setTitle("Artículo añadido");
+        builder.setMessage("Artículo añadido al pedido");
+
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

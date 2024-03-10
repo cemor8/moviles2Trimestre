@@ -24,6 +24,8 @@ import com.example.bar.adaptadores.PlatosAdapter;
 import com.example.bar.adaptadores.PrimerosAdapter;
 import com.example.bar.adaptadores.SegundosAdapter;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,6 +34,7 @@ import java.util.Optional;
 
 import modelo.Bebida;
 import modelo.ConexionRetrofit;
+import modelo.Consumicion;
 import modelo.Data;
 import modelo.Menu;
 import modelo.MenuMeter;
@@ -208,21 +211,6 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
      * @param view
      */
     public void meterMenu(View view){
-        if (this.bebidaSeleccionada == null || this.primeroSeleccionado == null || this.segundoSeleccionado == null || cantidad == null){
-            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
-            builder.setTitle("Faltan datos");
-            builder.setMessage("Asegurese de seleccionar al menos un primero, un segundo y una bebida");
-
-            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            AlertDialog dialog = builder.create();
-            dialog.show();
-            return;
-        }
 
         if (this.data.getPedido().getEstado().equalsIgnoreCase("Preparando")){
             AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
@@ -246,30 +234,90 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
             AlertDialog dialog = builder.create();
             dialog.show();
             return;
+
         }
+        if(this.data.getPedido().getEstado().equalsIgnoreCase("servido")) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+            builder.setTitle("Pedido servido");
+            builder.setMessage("No es posible modificar el pedido una vez está servido");
+
+            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return;
+        }
+
+
+        if (this.bebidaSeleccionada == null || this.primeroSeleccionado == null || this.segundoSeleccionado == null || cantidad == null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+            builder.setTitle("Faltan datos");
+            builder.setMessage("Asegurese de seleccionar al menos un primero, un segundo y una bebida");
+
+            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return;
+        }
+
+
 
 
         System.out.println("precios y cantidades");
         System.out.println(cantidad);
         System.out.println(data.getMenuDia().getPrecio());
+
         MenuMeter menuMeter = new MenuMeter(data.getMenuDia().getDia(),this.primeroSeleccionado,this.segundoSeleccionado,this.bebidaSeleccionada,cantidad,data.getMenuDia().getPrecio() * cantidad);
 
-        Optional<MenuMeter> menuOptional = data.getPedido().getMenus().stream().filter(menuMeter1 -> menuMeter1.getPrimero().equals(menuMeter.getPrimero()) &&
-                menuMeter1.getSegundo().equals(menuMeter.getSegundo()) && menuMeter1.getBebida().equals(menuMeter.getBebida())).findAny();
+        Optional<MenuMeter> menuOptional = data.getPedido().getMenus().stream().filter(menuMeter1 -> menuMeter1.getPrimero().getNombre().equalsIgnoreCase(menuMeter.getPrimero().getNombre()) &&
+                menuMeter1.getSegundo().getNombre().equalsIgnoreCase(menuMeter.getSegundo().getNombre()) && menuMeter1.getBebida().getNombre().equalsIgnoreCase(menuMeter.getBebida().getNombre())).findAny();
         if (menuOptional.isPresent()){
             if (menuOptional.get().getCantidad() + menuMeter.getCantidad() > 15){
-
+                popUpMax();
                 return;
             }
 
             menuOptional.get().setCantidad(menuOptional.get().getCantidad() + menuMeter.getCantidad());
         }else {
             data.getPedido().getMenus().add(menuMeter);
-
         }
-        this.data.getPedido().setPrecio(this.data.getPedido().getPrecio() + menuMeter.getPrecio());
 
+        this.calcularPrecio();
+        BigDecimal bd = new BigDecimal(this.data.getPedido().getPrecio()).setScale(2, RoundingMode.HALF_UP);
+        double valorRedondeado = bd.doubleValue();
+        this.data.getPedido().setPrecio(valorRedondeado);
+        tvCantidad.setText("1");
+        this.cantidad = 1;
+        productoMeter();
         modificarPedido(view);
+    }
+
+    public void calcularPrecio() {
+        this.data.getPedido().setPrecio(0.0);
+        double cantidadLugar = 0;
+        for (Consumicion consumicion : this.data.getPedido().getConsumiciones()){
+            this.data.getPedido().setPrecio(consumicion.getPrecio() * consumicion.getCantidad() + this.data.getPedido().getPrecio());
+        }
+        for (MenuMeter menuMeter : this.data.getPedido().getMenus()){
+            this.data.getPedido().setPrecio(menuMeter.getPrecio() * menuMeter.getCantidad() + this.data.getPedido().getPrecio());
+        }
+        if (data.getMesaSeleccionada().getUbicacion().equalsIgnoreCase("barra")){
+            cantidadLugar = -1;
+        }else if(data.getMesaSeleccionada().getUbicacion().equalsIgnoreCase("terraza")){
+            cantidadLugar = 2;
+        }
+        if (this.data.getPedido().getPrecio()>0){
+            this.data.getPedido().setPrecio(this.data.getPedido().getPrecio() + cantidadLugar);
+        }
     }
 
     /**
@@ -512,4 +560,38 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
         tvCantidad.setText(String.valueOf(cantidadMostrada));
 
     }
+    /**
+     * Método que se encarga de indicar el máximo de consumiciones por pedido
+     */
+    public void popUpMax() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+        builder.setTitle("Cantidad máxima");
+        builder.setMessage("Solo se permite como máximo 15 unidades por consumición");
+
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    public void productoMeter(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+        builder.setTitle("Artículo añadido");
+        builder.setMessage("Artículo añadido al pedido");
+
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 }
