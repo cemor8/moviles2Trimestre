@@ -71,6 +71,10 @@ public class ConsumicionAdapter extends RecyclerView.Adapter<ConsumicionAdapter.
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cadaconsumicion, parent, false);
         return new ConsumicionAdapter.ConsumicionViewHolder(v);
     }
+    public void actualizarDatos(ArrayList<Consumicion> consumicions) {
+        listaConsumiciones = consumicions;
+        notifyDataSetChanged();
+    }
 
 
     public void setOnItemClickListener(ConsumicionAdapter.OnItemClickListener onItemClickListener) {
