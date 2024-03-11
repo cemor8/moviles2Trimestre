@@ -67,6 +67,7 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
     }
 
     public void confirmarPedido(View view){
+
         if (this.data.getPedido().getConsumiciones().isEmpty() && this.data.getPedido().getMenus().isEmpty()){
             AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
             builder.setTitle("Ordene alguna consumición");
