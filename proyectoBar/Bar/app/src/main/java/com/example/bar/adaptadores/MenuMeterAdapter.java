@@ -106,6 +106,10 @@ public class MenuMeterAdapter extends RecyclerView.Adapter<MenuMeterAdapter.Menu
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cadamenumeter, parent, false);
         return new MenuMeterAdapter.MenuMeterViewHolder(v);
     }
+    public void actualizarDatos(ArrayList<MenuMeter> menusMeter2) {
+        menusMeter = menusMeter2;
+        notifyDataSetChanged();
+    }
 
 
     public void setOnItemClickListener(MenuMeterAdapter.OnItemClickListener onItemClickListener) {
