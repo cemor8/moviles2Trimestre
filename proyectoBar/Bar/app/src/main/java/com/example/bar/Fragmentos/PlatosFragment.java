@@ -137,7 +137,9 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
         }else if(data.getMesaSeleccionada().getUbicacion().equalsIgnoreCase("terraza")){
             cantidadLugar = 2;
         }
-        this.data.getPedido().setPrecio(this.data.getPedido().getPrecio() + cantidadLugar);
+        if (this.data.getPedido().getPrecio()>0){
+            this.data.getPedido().setPrecio(this.data.getPedido().getPrecio() + cantidadLugar);
+        }
     }
 
     /**

@@ -219,47 +219,78 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
      */
     @Override
     public void eliminar(int position) {
-        if (data.getPedido().getEstado().equalsIgnoreCase("Preparando")){
-            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
-            builder.setTitle("Pedido en preparación");
-            builder.setMessage("El pedido esta en preparación por nuestro cocinero, no es posible modificarlo");
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+        Call<Pedido> call = api.getpedido(data.getPedido().getId());
+        call.enqueue(new Callback<Pedido>() {
+            @Override
+            public void onResponse(Call<Pedido> call, Response<Pedido> response) {
+//                si la respuesta es satisfactoria se cargan los platos de la base de datos
+                if (response.isSuccessful()) {
+                    System.out.println(response.body());
 
-            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
+                    Pedido item = (Pedido) response.body();
+                    if (item!=null){
+                        data.setPedido(item);
+                        System.out.println(data.getPedido());
+                        button.setEnabled(data.getPedido().getEstado().equalsIgnoreCase("libre"));
+                        btnPagar.setEnabled(data.getPedido().getEstado().equalsIgnoreCase("Servido"));
+
+                    }
+                    if (data.getPedido().getEstado().equalsIgnoreCase("Preparando")){
+                        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+                        builder.setTitle("Pedido en preparación");
+                        builder.setMessage("El pedido esta en preparación por nuestro cocinero, no es posible modificarlo");
+
+                        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                        return;
+                    }else if(data.getPedido().getEstado().equalsIgnoreCase("servido")){
+                        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
+                        builder.setTitle("Pedido servido");
+                        builder.setMessage("No es posible modificar el pedido una vez está servido");
+
+                        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                        return;
+                    }
+
+                    MenuMeter menuMeter = data.getPedido().getMenus().get(position);
+                    data.getPedido().getMenus().remove(position);
+                    MenuMeterAdapter adapter = (MenuMeterAdapter) recyclerViewMen.getAdapter();
+
+                    adapter.actualizarDatos(data.getPedido().getMenus());
+                    calcularPrecio();
+                    sumarMenu(menuMeter);
+
+
+                }else {
+                    int statusCode = response.code();
+                    System.out.println(statusCode);
+                    System.out.println("respuesta mal");
+
                 }
-            });
+            }
 
-            AlertDialog dialog = builder.create();
-            dialog.show();
-            return;
-        }else if(data.getPedido().getEstado().equalsIgnoreCase("servido")){
-            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
-            builder.setTitle("Pedido servido");
-            builder.setMessage("No es posible modificar el pedido una vez está servido");
-
-            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-
-            AlertDialog dialog = builder.create();
-            dialog.show();
-            return;
-        }
-
-
-
-        MenuMeter menuMeter = data.getPedido().getMenus().get(position);
-        data.getPedido().getMenus().remove(position);
-        MenuMeterAdapter adapter = (MenuMeterAdapter) recyclerViewMen.getAdapter();
-        adapter.notifyItemRemoved(position);
-        adapter.notifyItemRangeChanged(position, adapter.getItemCount());
-        calcularPrecio();
-        sumarMenu(menuMeter);
+            @Override
+            public void onFailure(Call<Pedido> call, Throwable t) {
+                System.out.println("error");
+                System.out.println(t.getMessage());
+            }
+        });
 
     }
 
@@ -653,8 +684,10 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
         }else if(data.getMesaSeleccionada().getUbicacion().equalsIgnoreCase("terraza")){
             cantidadLugar = 2;
         }
-        if (this.data.getPedido().getPrecio()>0)
-        this.data.getPedido().setPrecio(this.data.getPedido().getPrecio() + cantidadLugar);
+        if (this.data.getPedido().getPrecio()>0){
+            this.data.getPedido().setPrecio(this.data.getPedido().getPrecio() + cantidadLugar);
+        }
+
     }
 
 }
