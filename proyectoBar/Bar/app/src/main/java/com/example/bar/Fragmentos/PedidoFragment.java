@@ -23,11 +23,14 @@ import com.example.bar.R;
 import com.example.bar.adaptadores.ConsumicionAdapter;
 import com.example.bar.adaptadores.MenuMeterAdapter;
 
+import java.util.ArrayList;
+
 import modelo.ConexionRetrofit;
 import modelo.Consumicion;
 import modelo.Data;
 import modelo.MenuMeter;
 import modelo.Pedido;
+import modelo.PresupuestoRequest;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -116,6 +119,7 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
 
     public void pagarPedido(View view){
         this.data.getPedido().setEstado("Pagado");
+        crearPresupuesto();
         crearFactura();
 
     }
@@ -551,6 +555,44 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
             }
         });
     }
+
+    public void crearPresupuesto(){
+        ArrayList<Consumicion> consumiciones= new ArrayList<>();
+        for (Consumicion consumicion : data.getPedido().getConsumiciones()){
+            consumiciones.add(consumicion);
+        }
+        for (MenuMeter consumicion : data.getPedido().getMenus()){
+            consumiciones.add(new Consumicion("Menu dia",consumicion.getPrecio(),consumicion.getCantidad(),"menu"));
+        }
+        String nombreCliente = "";
+        if (data.getMesaSeleccionada().getSitios().isEmpty()){
+            nombreCliente = data.getMesaSeleccionada().getNombre();
+        }else {
+            nombreCliente = data.getMesaSeleccionada().getSitios().get(0).getNombre();
+        }
+        PresupuestoRequest presupuestoRequest = new PresupuestoRequest(nombreCliente,consumiciones);
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+        Call<ResponseBody> call = api.crearPresupuesto(presupuestoRequest);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    System.out.println("presupuesto creado");
+                } else {
+                    // Manejar respuesta fallida
+                    System.out.println("error al crear el presupuesto");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                System.out.println("presupuesto creado");
+            }
+        });
+    }
+
+
 
     /**
      * Método que se encarga de eliminar el pedido de la base de datos

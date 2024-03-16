@@ -120,6 +120,9 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
         recyclerView.addItemDecoration(new Margen(espacio,false));
     }
 
+    /**
+     * Método que se encarga de calcular el precio del menu
+     */
     public void calcularPrecio() {
         this.data.getPedido().setPrecio(0.0);
         double cantidadLugar = 0;

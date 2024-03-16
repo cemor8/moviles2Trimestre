@@ -10,52 +10,52 @@
         android:id="@+id/textView"
         android:layout_width="204dp"
         android:layout_height="41dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="104dp"
-        android:layout_marginBottom="55dp"
         android:fontFamily="@font/roboto"
         android:text="Nombre de Mesa"
         android:textColor="@color/white"
         android:textSize="26dp"
-        app:layout_constraintBottom_toTopOf="@+id/introducirNombreMesa"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <EditText
         android:id="@+id/introducirNombreMesa"
         android:layout_width="225dp"
         android:layout_height="55dp"
-        android:layout_marginEnd="93dp"
-        android:layout_marginBottom="37dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="92dp"
         android:background="@drawable/edittext"
         android:ems="10"
         android:hint="Escribe aquí..."
         android:inputType="text"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/btnLogear"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
         android:id="@+id/btnLogear"
         android:layout_width="225dp"
         android:layout_height="66dp"
-        android:layout_marginEnd="93dp"
-        android:layout_marginBottom="205dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="92dp"
         android:backgroundTint="@color/acento"
         android:onClick="login"
         android:text="Entrar"
         android:textColorLink="@color/acento"
         android:textSize="20sp"
         app:cornerRadius="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/introducirNombreMesa" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="125dp"
-        android:layout_marginTop="83dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="348dp"
+        android:layout_height="265dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo" />
 </androidx.constraintlayout.widget.ConstraintLayout>

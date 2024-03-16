@@ -301,6 +301,9 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
         modificarPedido(view);
     }
 
+    /**
+     * Método que se encarga de calcular el precio del menu
+     */
     public void calcularPrecio() {
         this.data.getPedido().setPrecio(0.0);
         double cantidadLugar = 0;
@@ -578,6 +581,10 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+    /**
+     * Método que se encaga de mostrar el dialog al meter el producto
+     */
     public void productoMeter(){
         AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
         builder.setTitle("Artículo añadido");

@@ -9,6 +9,7 @@ import modelo.MenuMeter;
 import modelo.Mesa;
 import modelo.Pedido;
 import modelo.Plato;
+import modelo.PresupuestoRequest;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -59,4 +60,6 @@ public interface Api {
     Call<ResponseBody> eliminarPedido(@Path("id") int id);
     @DELETE("/api/reservas/{nombreMesa}")
     Call<ResponseBody> eliminarReserva(@Path("nombreMesa") String nombreMesa);
+    @POST("/factura")
+    Call<ResponseBody> crearPresupuesto(@Body PresupuestoRequest presupuesto);
 }
