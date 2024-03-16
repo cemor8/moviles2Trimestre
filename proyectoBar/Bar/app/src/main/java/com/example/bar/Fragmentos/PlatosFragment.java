@@ -143,13 +143,47 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
     }
 
     /**
-     * Método que se encarga de añadir un plato a la lista de consumciones del pedido
+     * Método que se encarga de recibir el pedido de la base de datos y a continuacion llamar al metodo de meter el pedido
      * @param position posicion del plato en la lista de platos
      * @param textView  textview con la cantidad
      */
     @Override
     public void onItemClick(int position, TextView textView) {
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+        Call<Pedido> call = api.getpedido(data.getPedido().getId());
+        call.enqueue(new Callback<Pedido>() {
+            @Override
+            public void onResponse(Call<Pedido> call, Response<Pedido> response) {
+//                si la respuesta es satisfactoria se cargan los platos de la base de datos
+                if (response.isSuccessful()) {
+                    System.out.println(response.body());
+                    Pedido item = (Pedido) response.body();
+                    if (item!=null){
+                        data.setPedido(item);
+                        continuar(position,textView);
+                    }
+                }else {
+                    int statusCode = response.code();
+                    System.out.println(statusCode);
+                    System.out.println("respuesta mal");
 
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Pedido> call, Throwable t) {
+                System.out.println("error");
+                System.out.println(t.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Método que se encarga de añadir un plato a la lista de consumciones del pedido
+     * @param position posicion del plato en la lista de platos
+     * @param textView  textview con la cantidad
+     */
+    public void continuar(int position,TextView textView){
         if (this.data.getPedido().getEstado().equalsIgnoreCase("Preparando")){
             AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
             builder.setTitle("Pedido en preparación");
@@ -184,7 +218,7 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
 
 
         /* Obtener cantidad, crear consumicion, si ya esta ese plato añadido, se añade la cantidad a la consumicion de la lista, si no
-        * se añade el plato */
+         * se añade el plato */
 
         Integer cantidad = Integer.valueOf(String.valueOf(textView.getText()));
         Plato plato = this.data.getListaPlatosRestaurante().get(position);
@@ -195,7 +229,7 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
 
                 popUpMax();
             }
-           consumicionOptional.get().setCantidad(consumicionOptional.get().getCantidad() + consumicion.getCantidad());
+            consumicionOptional.get().setCantidad(consumicionOptional.get().getCantidad() + consumicion.getCantidad());
         }else {
             this.data.getPedido().getConsumiciones().add(consumicion);
         }
@@ -241,9 +275,8 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
             }
         });
         productoMeter();
-
-
     }
+
 
     /**
      * Método que aumenta la cantidad de un plato antes de añadirlo

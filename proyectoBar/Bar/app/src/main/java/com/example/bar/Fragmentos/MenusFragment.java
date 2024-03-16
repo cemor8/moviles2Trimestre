@@ -205,13 +205,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
         System.out.println(bebidaSeleccionada);
 
     }
-
-    /**
-     * Método que se encarga de meter el menú en la base de datos
-     * @param view
-     */
-    public void meterMenu(View view){
-
+    public void continuar(View view){
         if (this.data.getPedido().getEstado().equalsIgnoreCase("Preparando")){
             AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
             builder.setTitle("Pedido en preparación");
@@ -268,10 +262,6 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
             dialog.show();
             return;
         }
-
-
-
-
         System.out.println("precios y cantidades");
         System.out.println(cantidad);
         System.out.println(data.getMenuDia().getPrecio());
@@ -299,6 +289,44 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
         this.cantidad = 1;
         productoMeter();
         modificarPedido(view);
+    }
+    /**
+     * Método que se encarga de meter el menú en la base de datos
+     * @param view
+     */
+    public void meterMenu(View view){
+
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+        Call<Pedido> call = api.getpedido(data.getPedido().getId());
+        call.enqueue(new Callback<Pedido>() {
+            @Override
+            public void onResponse(Call<Pedido> call, Response<Pedido> response) {
+//                si la respuesta es satisfactoria se cargan los platos de la base de datos
+                if (response.isSuccessful()) {
+                    System.out.println(response.body());
+
+                    Pedido item = (Pedido) response.body();
+                    if (item!=null){
+                        data.setPedido(item);
+                        continuar(view);
+                    }
+
+
+
+                }else {
+                    int statusCode = response.code();
+                    System.out.println(statusCode);
+                    System.out.println("respuesta mal");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Pedido> call, Throwable t) {
+                System.out.println("error");
+                System.out.println(t.getMessage());
+            }
+        });
     }
 
     /**

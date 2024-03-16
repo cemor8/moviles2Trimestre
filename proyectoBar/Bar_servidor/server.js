@@ -496,7 +496,6 @@ app.post('/factura', async (req, res) => {
         if (!clienteId) return res.status(404).send({ success: false, message: "Cliente no encontrado." });
         const lineas = [];
         for (let producto of productos) {
-            console.log(producto)
             let productoInfo = await buscarIdProducto(producto.nombre, uid);
             if (!productoInfo) {
                 console.error(`Producto no encontrado: ${producto.nombre}`);
@@ -510,9 +509,6 @@ app.post('/factura', async (req, res) => {
             }]);
         }
         if (lineas.length > 0) {
-            console.log(clienteId)
-            console.log("lineas")
-            console.log(lineas)
             const response = await axios.post(`${odooUrl}/jsonrpc`, {
                 jsonrpc: "2.0",
                 method: "call",
@@ -599,8 +595,6 @@ async function buscarIdProducto(nombreProducto, uid) {
     });
 
     const products = response.data.result;
-    console.log("productos")
-    console.log(products)
     if (products.length > 0) {
         return { id: products[0].id, precio: products[0].list_price };
     } else {

@@ -150,6 +150,41 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
     @Override
     public void onItemClick(int position,TextView textView) {
 
+        Api api = ConexionRetrofit.getConexion().create(Api.class);
+        Call<Pedido> call = api.getpedido(data.getPedido().getId());
+        call.enqueue(new Callback<Pedido>() {
+            @Override
+            public void onResponse(Call<Pedido> call, Response<Pedido> response) {
+//                si la respuesta es satisfactoria se cargan los platos de la base de datos
+                if (response.isSuccessful()) {
+                    System.out.println(response.body());
+
+                    Pedido item = (Pedido) response.body();
+                    if (item!=null){
+                        data.setPedido(item);
+                        continuar(position,textView);
+                    }
+
+
+
+                }else {
+                    int statusCode = response.code();
+                    System.out.println(statusCode);
+                    System.out.println("respuesta mal");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Pedido> call, Throwable t) {
+                System.out.println("error");
+                System.out.println(t.getMessage());
+            }
+        });
+    }
+
+
+    public void continuar(int position, TextView textView){
         if (this.data.getPedido().getEstado().equalsIgnoreCase("Preparando")){
             AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
             builder.setTitle("Pedido en preparación");
@@ -244,6 +279,7 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
         });
         productoMeter();
     }
+
 
     /**
      * Método que se encarga de modificar el pedido en la base de datos
