@@ -80,7 +80,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
 
         if(getArguments() != null){
             this.data = getArguments().getParcelable("data");
-            System.out.println("comunicacion correcta");
+
             this.recibirPedido(view);
             this.inicializar(view);
         }
@@ -180,7 +180,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
     public void onItemClickPrimero(int position) {
         Plato primero = this.data.getMenuDia().getPrimeros().get(position);
         this.primeroSeleccionado = primero;
-        System.out.println(primeroSeleccionado);
+
 
     }
     /**
@@ -191,7 +191,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
     public void onItemClickSegundo(int position) {
         Plato segundo = this.data.getMenuDia().getSegundos().get(position);
         this.segundoSeleccionado = segundo;
-        System.out.println(segundoSeleccionado);
+
 
     }
     /**
@@ -202,7 +202,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
     public void onItemClickBebida(int position) {
         Bebida bebida = this.data.getMenuDia().getBebidas().get(position);
         this.bebidaSeleccionada = bebida;
-        System.out.println(bebidaSeleccionada);
+
 
     }
     public void continuar(View view){
@@ -262,9 +262,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
             dialog.show();
             return;
         }
-        System.out.println("precios y cantidades");
-        System.out.println(cantidad);
-        System.out.println(data.getMenuDia().getPrecio());
+
 
         MenuMeter menuMeter = new MenuMeter(data.getMenuDia().getDia(),this.primeroSeleccionado,this.segundoSeleccionado,this.bebidaSeleccionada,cantidad,data.getMenuDia().getPrecio() * cantidad);
 
@@ -303,7 +301,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
             public void onResponse(Call<Pedido> call, Response<Pedido> response) {
 //                si la respuesta es satisfactoria se cargan los platos de la base de datos
                 if (response.isSuccessful()) {
-                    System.out.println(response.body());
+
 
                     Pedido item = (Pedido) response.body();
                     if (item!=null){
@@ -365,7 +363,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
 
                 if (response.isSuccessful()) {
                     restarCantidades(view);
-                    System.out.println("correcto");
+
 
                 }else {
                     int statusCode = response.code();
@@ -429,7 +427,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
             public void onResponse(Call<Pedido> call, Response<Pedido> response) {
 //                si la respuesta es satisfactoria se cargan los platos de la base de datos
                 if (response.isSuccessful()) {
-                    System.out.println(response.body());
+
 
                     Pedido item = (Pedido) response.body();
                     if (item!=null){
@@ -458,9 +456,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
      * @param view
      */
     public void restarCantidades(View view){
-        System.out.println("Restando");
-        System.out.println("Primero");
-        System.out.println(primeroSeleccionado);
+
         Api api = ConexionRetrofit.getConexion().create(Api.class);
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), "{ \"cantidad\": " + cantidad + " }");
         Call<ResponseBody> call = api.restarPlatos(primeroSeleccionado.getNombre(),body);
@@ -468,8 +464,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                System.out.println("primeso seleccionado");
-                System.out.println(primeroSeleccionado);
+
                 if (response.isSuccessful()) {
                     primeroSeleccionado.setCantidad(primeroSeleccionado.getCantidad() - cantidad);
                     restarSegundo(view);
@@ -495,8 +490,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
      * @param view
      */
     public void restarSegundo(View view){
-        System.out.println("segundo");
-        System.out.println(segundoSeleccionado);
+
         Api api = ConexionRetrofit.getConexion().create(Api.class);
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), "{ \"cantidad\": " + cantidad + " }");
         Call<ResponseBody> call = api.restarPlatos(segundoSeleccionado.getNombre(),body);
@@ -529,8 +523,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
      * @param view
      */
     public void restarBebida(View view){
-        System.out.println("bebida");
-        System.out.println(bebidaSeleccionada);
+
         Api api = ConexionRetrofit.getConexion().create(Api.class);
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), "{ \"cantidad\": " + cantidad + " }");
         Call<ResponseBody> call = api.restarBebida(bebidaSeleccionada.getNombre(),body);
@@ -539,8 +532,7 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 if (response.isSuccessful()) {
-                    System.out.println("bebida");
-                    System.out.println(bebidaSeleccionada);
+
                     bebidaSeleccionada.setCantidad(bebidaSeleccionada.getCantidad() - cantidad);
                     reiniciarSeleccionados(view);
                 }else {
@@ -564,16 +556,14 @@ public class MenusFragment extends Fragment implements PrimerosAdapter.OnItemCli
      */
     public void sumar(View view){
         Integer cantidadMostrada = Integer.parseInt(String.valueOf(tvCantidad.getText()));
-        System.out.println(primeroSeleccionado.getCantidad());
-        System.out.println(bebidaSeleccionada.getCantidad());
-        System.out.println(segundoSeleccionado.getCantidad());
+
         if ((primeroSeleccionado != null && cantidadMostrada + 1 > primeroSeleccionado.getCantidad()) ||
                 (segundoSeleccionado != null && cantidadMostrada + 1 > segundoSeleccionado.getCantidad()) ||
                 (bebidaSeleccionada != null && cantidadMostrada + 1 > bebidaSeleccionada.getCantidad()) ||
                 cantidadMostrada + 1 > 15) {
             return;
         }
-        System.out.println("hola");
+
         this.cantidad = cantidadMostrada + 1;
         tvCantidad.setText(String.valueOf(this.cantidad));
     }

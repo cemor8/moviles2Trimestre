@@ -58,7 +58,6 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
         this.recyclerView = view.findViewById(R.id.contenedorListaPlatos);
         if(getArguments() != null){
             this.data = getArguments().getParcelable("data");
-            System.out.println("comunicacion correcta");
             this.recibirPedido(view);
             this.inicializar(view);
         }
@@ -79,7 +78,7 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
             public void onResponse(Call<ArrayList<Plato>> call, Response<ArrayList<Plato>> response) {
 //                si la respuesta es satisfactoria se cargan los platos de la base de datos
                 if (response.isSuccessful()) {
-                    System.out.println(response.body());
+
 
                     data.getListaPlatosRestaurante().removeAll(data.getListaPlatosRestaurante());
 
@@ -156,7 +155,7 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
             public void onResponse(Call<Pedido> call, Response<Pedido> response) {
 //                si la respuesta es satisfactoria se cargan los platos de la base de datos
                 if (response.isSuccessful()) {
-                    System.out.println(response.body());
+
                     Pedido item = (Pedido) response.body();
                     if (item!=null){
                         data.setPedido(item);
@@ -369,9 +368,8 @@ public class PlatosFragment extends Fragment implements PlatosAdapter.OnItemClic
         call.enqueue(new Callback<Pedido>() {
             @Override
             public void onResponse(Call<Pedido> call, Response<Pedido> response) {
-//                si la respuesta es satisfactoria se cargan los platos de la base de datos
                 if (response.isSuccessful()) {
-                    System.out.println(response.body());
+
                     Pedido item = (Pedido) response.body();
                     if (item!=null){
                         data.setPedido(item);

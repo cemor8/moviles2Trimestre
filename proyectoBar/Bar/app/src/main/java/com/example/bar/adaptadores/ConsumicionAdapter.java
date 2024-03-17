@@ -84,8 +84,9 @@ public class ConsumicionAdapter extends RecyclerView.Adapter<ConsumicionAdapter.
     @Override
     public void onBindViewHolder(ConsumicionAdapter.ConsumicionViewHolder holder, int position) {
         Consumicion consumicion = listaConsumiciones.get(position);
+        String str = consumicion.getPrecio() + " €";
         holder.tvNombreConsumicion.setText(consumicion.getNombre());
-        holder.tvPrecioConsumicion.setText(String.valueOf(consumicion.getPrecio()));
+        holder.tvPrecioConsumicion.setText(str);
         String cantidad = consumicion.getCantidad()+" unidades";
         holder.cantidadConsumicion.setText(cantidad);
 

@@ -56,7 +56,7 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
         this.recyclerView = view.findViewById(R.id.contenedorListaBebidas);
         if(getArguments() != null){
             this.data = getArguments().getParcelable("data");
-            System.out.println("comunicacion correcta");
+
             this.recibirPedido(view);
             this.inicializar(view);
         }
@@ -77,7 +77,7 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
 
                 if (response.isSuccessful()) {
 
-                    System.out.println(response.body());
+
                     data.getListaBebidasRestaurante().removeAll(data.getListaBebidasRestaurante());
                     ArrayList<Bebida> items = (ArrayList<Bebida>) response.body();
                     data.getListaBebidasRestaurante().addAll(items);
@@ -157,7 +157,7 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
             public void onResponse(Call<Pedido> call, Response<Pedido> response) {
 //                si la respuesta es satisfactoria se cargan los platos de la base de datos
                 if (response.isSuccessful()) {
-                    System.out.println(response.body());
+
 
                     Pedido item = (Pedido) response.body();
                     if (item!=null){
@@ -262,7 +262,7 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
                         listaBebidasAdapter.notifyDataSetChanged();
                     }
                     modificarPedido();
-                    System.out.println(data.getListaPlatosRestaurante());
+
                 }else {
                     int statusCode = response.code();
                     System.out.println(statusCode);
@@ -357,7 +357,7 @@ public class BebidaFragment extends Fragment implements ListaBebidasAdapter.OnIt
             public void onResponse(Call<Pedido> call, Response<Pedido> response) {
 //                si la respuesta es satisfactoria se cargan los platos de la base de datos
                 if (response.isSuccessful()) {
-                    System.out.println(response.body());
+
 
                     Pedido item = (Pedido) response.body();
                     if (item!=null){

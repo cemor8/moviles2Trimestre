@@ -62,7 +62,7 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
 
         if(getArguments() != null){
             this.data = getArguments().getParcelable("data");
-            System.out.println("comunicacion correcta");
+
             this.recibirPedido(view);
         }
 
@@ -139,12 +139,12 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
             public void onResponse(Call<Pedido> call, Response<Pedido> response) {
 //                si la respuesta es satisfactoria se cargan los platos de la base de datos
                 if (response.isSuccessful()) {
-                    System.out.println(response.body());
+
 
                     Pedido item = (Pedido) response.body();
                     if (item!=null){
                         data.setPedido(item);
-                        System.out.println(data.getPedido());
+
                         button.setEnabled(data.getPedido().getEstado().equalsIgnoreCase("libre"));
                         btnPagar.setEnabled(data.getPedido().getEstado().equalsIgnoreCase("Servido"));
 
@@ -230,12 +230,12 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
             public void onResponse(Call<Pedido> call, Response<Pedido> response) {
 //                si la respuesta es satisfactoria se cargan los platos de la base de datos
                 if (response.isSuccessful()) {
-                    System.out.println(response.body());
+
 
                     Pedido item = (Pedido) response.body();
                     if (item!=null){
                         data.setPedido(item);
-                        System.out.println(data.getPedido());
+
                         button.setEnabled(data.getPedido().getEstado().equalsIgnoreCase("libre"));
                         btnPagar.setEnabled(data.getPedido().getEstado().equalsIgnoreCase("Servido"));
 
@@ -310,8 +310,7 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
     public void recorrer(View view){
         RecyclerView recyclerView = view.findViewById(R.id.contenedorConsumiciones);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        System.out.println("aqui");
-        System.out.println(data.getPedido().getConsumiciones());
+
         ConsumicionAdapter adapter = new ConsumicionAdapter(data.getPedido().getConsumiciones());
         adapter.setOnItemClickListener(this::onItemClickConsumicion);
         recyclerView.setAdapter(adapter);
@@ -351,12 +350,12 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
             public void onResponse(Call<Pedido> call, Response<Pedido> response) {
 //                si la respuesta es satisfactoria se cargan los platos de la base de datos
                 if (response.isSuccessful()) {
-                    System.out.println(response.body());
+
 
                     Pedido item = (Pedido) response.body();
                     if (item!=null){
                         data.setPedido(item);
-                        System.out.println(data.getPedido());
+
                         button.setEnabled(data.getPedido().getEstado().equalsIgnoreCase("libre"));
                         btnPagar.setEnabled(data.getPedido().getEstado().equalsIgnoreCase("Servido"));
                         recorrer(view);
@@ -415,7 +414,7 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
 
                 if (response.isSuccessful()) {
                     sumarPrimero(menuMeter);
-                    System.out.println(data.getListaPlatosRestaurante());
+
                 }else {
                     int statusCode = response.code();
                     System.out.println(statusCode);
@@ -443,7 +442,7 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
 
                 if (response.isSuccessful()) {
                     sumarSegundo(menuMeter);
-                    System.out.println(data.getListaPlatosRestaurante());
+
                 }else {
                     int statusCode = response.code();
                     System.out.println(statusCode);
@@ -470,7 +469,7 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
 
                 if (response.isSuccessful()) {
                     modificarPedido();
-                    System.out.println(data.getListaPlatosRestaurante());
+
                 }else {
                     int statusCode = response.code();
                     System.out.println(statusCode);
@@ -507,7 +506,7 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
 
                 if (response.isSuccessful()) {
                     modificarPedido();
-                    System.out.println(data.getListaPlatosRestaurante());
+
                 }else {
                     int statusCode = response.code();
                     System.out.println(statusCode);
@@ -537,7 +536,7 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 if (response.isSuccessful()) {
-                    System.out.println("factura creada correctamente");
+
                     eliminarPedido();
 
                 }else {
@@ -579,7 +578,7 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
                 if (response.isSuccessful()) {
                     System.out.println("presupuesto creado");
                 } else {
-                    // Manejar respuesta fallida
+
                     System.out.println("error al crear el presupuesto");
                 }
             }
@@ -606,7 +605,7 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 if (response.isSuccessful()) {
-                    System.out.println("pedido eliminado correctamente");
+
                     eliminarReserva();
                 }else {
                     int statusCode = response.code();
@@ -642,7 +641,7 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 if (response.isSuccessful()) {
-                    System.out.println("reserva eliminada correctamente");
+
                     liberarMesa(finalNombre);
                 }else {
                     int statusCode = response.code();
@@ -673,7 +672,7 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 if (response.isSuccessful()) {
-                    System.out.println("mesa liberada correctamente");
+
                     irLogin();
                 }else {
                     int statusCode = response.code();
@@ -695,20 +694,6 @@ public class PedidoFragment extends Fragment implements ConsumicionAdapter.OnIte
      * Método que se encarga de volver al login
      */
     public void irLogin(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.CustomAlertDialog));
-        builder.setTitle("Pago completado!");
-        builder.setMessage("Gracias por acudir a nuestro restaurante, hasta pronto!");
-
-        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
         Intent intent = new Intent(getContext(), ControllerLogin.class);
         startActivity(intent);
     }

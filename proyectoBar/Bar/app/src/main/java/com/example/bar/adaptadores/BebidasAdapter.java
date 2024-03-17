@@ -97,6 +97,8 @@ public class BebidasAdapter extends RecyclerView.Adapter<BebidasAdapter.BebidasV
             holder.imgBebida.setImageResource(R.drawable.kas);
         }else if(bebida.getNombre().toLowerCase(Locale.ROOT).contains("cocacola")){
             holder.imgBebida.setImageResource(R.drawable.cocacola);
+        }else {
+            holder.imgBebida.setImageResource(R.drawable.cocacola);
         }
     }
 
